@@ -1,0 +1,204 @@
+/* CSS Color Definitions*/
+:root {
+    --theme1: #A3E4D7;
+    --theme2: #1BF2CB;
+    --theme3: #0AA696;
+    --theme4: #165873;
+    --theme5: #0D2340;
+    --grey1: #D6DBDF;
+    --grey2: #5D6D7E;
+    --grey3: #212F3C;
+}
+
+/* CSS General Object Definitions*/
+html, body {
+    text-align: center;
+}
+
+p {
+    text-align: left;
+}
+
+/* CSS Page Layout Definitions*/
+body {
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    color: #000000;
+    background-color: white;
+}
+* {
+	margin: 0 auto 0 auto;
+	text-align:left;
+}
+
+#page {
+    margin: 0 auto 0 auto;
+    display: block;
+    height: auto;
+    position: relative;
+    overflow: hidden;
+    background: white;
+}
+
+.mainContent {
+    margin: 0px 50px;
+}
+
+
+/* CSS Header Definitions*/
+#header {
+    background: var(--theme4);
+    height: 100px;
+}
+
+#headerTitle {
+    position: relative;
+    left: 30px;
+    top: 20px;
+    color: var(--theme1);
+    text-align: left;
+    font-size: 38px;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#headerSubText {
+    position: relative;
+    left: 32px;
+    top: 20px;
+    color: var(--theme2);
+    text-align: left;
+    font-size: 18px;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* CSS Nav Bar Definitions*/
+.navBar {
+    background: var(--grey3);
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.navBar li {
+    display: inline;
+    float: left;
+    margin: 0px 5px;
+}
+
+.navBar a {
+    display: block;
+    padding: 10px 16px;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.navBar a:hover {
+    color: var(--grey3);
+    background: var(--grey1);
+}
+
+.activeTab {
+    background: var(--theme1);
+}
+
+.activeTab a {
+    color: var(--grey3);
+}
+
+
+/* CSS Project Display Definitions*/
+.project {
+	background: var(--theme3);
+    margin-top: 15px;
+    padding: 3px;
+}
+
+.projectTitle {
+	padding: 8px 12px;
+}
+
+.projectTitle h1 {
+	font-size: 24px;
+	font-weight: bold;
+	color: var(--grey3);
+}
+
+.projectTitle h2 {
+    margin-top: 5px;
+    font-size: 18px;
+    color: white;
+}
+
+.projectContent {
+    background: var(--theme1);
+    display: flex;
+}
+
+.projectImage {
+ 
+    margin: 10px;
+}
+
+.projectImage img {
+    height: 150px;
+    width: 150px;
+}
+
+.projectText {
+	padding-right: 25px;
+	font-size: 16px;
+	color:black;
+	line-height: 30px;
+}
+
+a {
+	text-decoration:none;
+	color:#152413;
+}
+
+a:hover {
+	color:#597A41;
+}
+
+/* CSS Footer Definitions*/
+#footer {
+    background: var(--theme5);
+    list-style-type: none;
+    overflow: hidden;
+    padding: 10px;
+    margin-top: 15px;
+}
+
+#footer li {
+    display: inline;
+    float: left;
+}
+
+#footer p {
+    color: var(--grey2);
+    font-size: 12px;
+    font-weight: bold;
+}
+
+#footer a {
+    color: var(--grey1);
+    text-align: center;
+    text-decoration: none;
+    font-size: 12px;
+}
+
+#footer a:hover {
+    color: white;
+}
+
+#dataTable {
+    border: solid;
+}
