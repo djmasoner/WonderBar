@@ -1,0 +1,8 @@
+# Ignore Mac system files
+.DS_store
+
+# Ignore google keys
+*.json
+
+# Python pycache:
+__pycache__/
