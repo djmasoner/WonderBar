@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="home.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}" />
     <title>WonderBar</title>
 </head>
 
@@ -34,7 +34,7 @@
   <div class="v-header container">
     <div class="fullscreen-video-wrap">
       <video class="fullscreen-video-wrap video" autoplay loop controls muted>
-        <source src="walkingforest4k.mp4" type="video/mp4" alt="Welcome Video"/>
+        <source src="https://storage.googleapis.com/wonderbar-cs467.appspot.com/walkingforest4k.mp4" type="video/mp4" alt="Welcome Video"/>
     </div>
     <div class="header-overlay"></div>
     <div class="header-content">
@@ -46,7 +46,7 @@
         database of information that facilitates learning and discovery.
         Come on in and start exploring!
       </p>
-         <a href="#" class="btn" href="login.html">Login</a>
+         <a href="/oauth" class="btn">Login</a>
     </div>
 </main>
 
