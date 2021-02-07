@@ -1,0 +1,53 @@
+﻿#mainContent {
+    background-image: url('Resources\forest-background.jpg');
+}
+
+#background {
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    z-index: -1;
+}
+
+#background img {
+    position: absolute;
+    opacity: 0.5;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    min-width: 50%;
+    min-height: 50%;
+}
+
+.about-text {
+    margin: 40px auto;
+    text-align: center;
+    width: 80%;
+}
+
+.about-text h1 {
+    font-size: 2rem;
+}
+
+.about-text p {
+    font-size: 1rem;
+}
+
+.info-btn {
+    border-radius: 12px;
+    background: var(--theme3);
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 8px 24px;
+    text-decoration: none;
+}
+
+.info-btn:hover {
+    opacity: 0.8;
+    color: white;
+}
