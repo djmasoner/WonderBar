@@ -19,11 +19,6 @@ runtime: python37
 # something like https://cloud.google.com/secret-manager/docs/overview to help keep
 # secrets secret.
 env_variables:
-  CLOUD_SQL_CONNECTION_NAME: wonderbar-cs467:us-east1:wonderbar-cs467
-  DB_USER: root
-  DB_PASS: JwOiEA83Co9IMCPk
-  DB_NAME: wonderbar_db_cs467
-  CLOUD_STORAGE_BUCKET: wonderbar-cs467.appspot.com
 
 handlers:
   # This handler routes all requests not caught above to your main app. It is
@@ -32,5 +27,7 @@ handlers:
 
 - url: /static
   static_dir: static
+- url: /templates
+  static_dir: templates
 - url: /.*
   script: auto

@@ -1,0 +1,371 @@
+ 
+/* CSS Color Definitions*/
+ :root {
+     --theme1: #A3E4D7;
+     --theme2: #1BF2CB;
+     --theme3: #0AA696;
+     --theme4: #165873;
+     --theme5: #0D2340;
+     --grey1: #D6DBDF;
+     --grey2: #5D6D7E;
+     --grey3: #212F3C;
+}
+/* CSS General Object Definitions*/
+ html, body {
+     text-align: center;
+}
+ p {
+     text-align: center;
+}
+/* CSS Page Layout Definitions*/
+ body {
+     /*margin: 0;*/
+    /*padding: 0;
+    */
+    height: 100%;
+     text-align: left;
+     font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+     font-size: 16px;
+     color: #000000;
+     background-color: white;
+     /*min-height: 100vh;*/
+  display: flex;
+  flex-direction: column;
+}
+ /** {*/
+     /*margin: 0 auto 0 auto;*/
+    /*text-align:left;
+    */
+/*}*/
+ #page {
+     /*margin: 0 auto 0 auto;*/
+     display: block;
+     height: auto;
+     /*position: relative;*/
+     overflow: hidden;
+     background: white;
+     flex: 1 0 auto;
+}
+ .mainContent {
+    /*margin: 0px 50px;
+    */
+     text-align: center;
+     padding: 0px;
+     background-color: white;
+     /*padding-bottom:60px;*/
+
+     width: 100%;
+    /*min-height: calc(80vh - 70px);
+    */
+}
+/* CSS Header Definitions*/
+ #header {
+     background: var(--theme4);
+     height: 100px;
+}
+ #headerTitle {
+     position: relative;
+     left: 30px;
+     top: 20px;
+     color: var(--theme1);
+     text-align: left;
+     font-size: 38px;
+     font-weight: bold;
+     font-family: Arial, Helvetica, sans-serif;
+}
+ #headerSubText {
+     position: relative;
+     left: 32px;
+     top: 20px;
+     color: var(--theme2);
+     text-align: left;
+     font-size: 18px;
+     font-weight: bold;
+     font-family: Arial, Helvetica, sans-serif;
+}
+/* CSS Nav Bar Definitions*/
+ .navBar {
+     background: var(--grey3);
+     list-style-type: none;
+     margin: 0;
+     padding: 0;
+     overflow: hidden;
+}
+ .navBar li {
+     display: inline;
+     float: left;
+     margin: 0px 5px;
+}
+ .navBar a {
+     display: block;
+     padding: 10px 16px;
+     color: white;
+     text-align: center;
+     text-decoration: none;
+     font-size: 16px;
+}
+ .navBar a:hover {
+     color: var(--grey3);
+     background: var(--grey1);
+}
+ a {
+     text-decoration:none;
+     color:#152413;
+}
+ a:hover {
+     color:#597A41;
+}
+/* CSS Footer Definitions*/
+ .footer {
+     /*position: fixed;*/
+   /*  left: 0;
+     bottom: 0;*/
+     width: 100%;
+     /*height: 60px;*/
+     flex-shrink: 0;
+    /*background-color: red;
+    */
+     color: white;
+     text-align: center;
+}
+ #footer {
+     background: var(--theme5);
+     list-style-type: none;
+     overflow: hidden;
+     /*padding: 10px;*/
+     margin-top: 15px;
+}
+ #footer li {
+     display: inline;
+     float: left;
+}
+ #footer p {
+     color: var(--grey2);
+     font-size: 12px;
+     font-weight: bold;
+}
+ #footer a {
+     color: var(--grey1);
+     text-align: center;
+     text-decoration: none;
+     font-size: 12px;
+}
+ #footer a:hover {
+     color: white;
+}
+ input[type=text], input[type=password], input[type=date], select {
+     width: 90%;
+     float: left;
+     padding: 12px;
+     border: 1px solid #ccc;
+     border-radius: 4px;
+     resize: vertical;
+     background-color: var(--grey1);
+}
+ input[type=button] {
+     background-color: var(--theme3);
+     color: white;
+     padding: 14px 20px;
+     margin: 8px 0;
+     border: none;
+     cursor: pointer;
+     width: 50%;
+     font-size: 1.4rem;
+     font-weight: 600;
+     margin-top: 10px;
+}
+ label {
+     padding: 12px 12px 12px 0;
+     display: inline-block;
+}
+ hr {
+     margin-bottom: 1px;
+}
+ .col-40 {
+     float: left;
+     width: 40%;
+     margin-top: 6px;
+}
+ .col-50 {
+     float: left;
+     width: 50%;
+     margin-top: 6px;
+}
+ .col-60 {
+     float: left;
+     width: 60%;
+     margin-top: 6px;
+}
+/* Clear floats after the columns */
+ .row:after {
+     content: "";
+     display: table;
+     clear: both;
+}
+/* Bordered form */
+ .styled-table {
+     margin-top: 40px;
+     display: inline-block;
+     border-collapse: collapse;
+    /*margin: 25px 0;
+    */
+     font-size: 16px;
+     font-family: sans-serif;
+     width: 90%;
+    /*min-width: 400px;
+    */
+    /*float: center;
+    */
+     box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+     border: thick solid #ccc;
+}
+ .styled-table thead tr {
+     background-color: var(--grey2);
+     color: #ffffff;
+     text-align: center;
+}
+ .styled-table th, .styled-table td {
+     padding: 12px 15px;
+}
+ .styled-table tbody tr {
+     border-bottom: 1px solid #dddddd;
+}
+ .styled-table tbody tr:nth-of-type(even) {
+     background-color: #f3f3f3;
+}
+ .styled-table tbody tr:last-of-type {
+     border-bottom: 2px solid #009879;
+}
+ .styled-table tbody tr.active-row {
+     font-weight: bold;
+     color: #009879;
+}
+ .add-class-form {
+     margin-top: 40px;
+     width: 75%;
+     display: inline-block;
+     border-collapse: collapse;
+     margin: 25px 0;
+     font-size: 16px;
+     font-family: sans-serif;
+    /*min-width: 400px;
+    */
+     box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+     border: thick solid #ccc;
+}
+ #myInput, #myInput2 {
+     background-image: url('https://www.w3schools.com/css/searchicon.png');
+    /* Add a search icon to input */
+     background-position: 10px 12px;
+    /* Position the search icon */
+     background-repeat: no-repeat;
+    /* Do not repeat the icon image */
+     width: 100%;
+    /* Full-width */
+     font-size: 16px;
+    /* Increase font-size */
+     padding: 12px 20px 12px 40px;
+    /* Add some padding */
+     border: 1px solid #ddd;
+    /* Add a grey border */
+     margin-bottom: 12px;
+    /* Add some space below the input */
+}
+/* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
+ @media screen and (max-width: 600px) {
+     .col-40, .col-50, .col-60, input[type=text] {
+         width: 100%;
+         margin-top: 0;
+         font-size: 16px;
+    }
+     input[type=button] {
+         width: 75%;
+         margin-top: 10px;
+         font-size: 16px;
+    }
+     .add-class-form {
+         margin-top: 40px;
+         width: 100%;
+         display: inline-block;
+         font-size: 16px;
+    }
+     .styled-table {
+         margin-top: 40px;
+         width: 100%;
+         display: inline-block;
+         font-size: 16px;
+    }
+}
+/* Float cancel and delete buttons and add an equal width */
+ .cancelbtn, .deletebtn {
+     float: left;
+     width: 50%;
+}
+/* Add a color to the cancel button */
+ .cancelbtn {
+     background-color: #ccc;
+     color: black;
+}
+/* Add a color to the delete button */
+ .deletebtn {
+     background-color: #f44336;
+}
+/* Add padding and center-align text to the container */
+ .container {
+     padding: 16px;
+     text-align: center;
+}
+/* The Modal (background) */
+ .modal {
+     display: none;
+    /* Hidden by default */
+     position: fixed;
+    /* Stay in place */
+     z-index: 1;
+    /* Sit on top */
+     left: 0;
+     top: 0;
+     width: 100%;
+    /* Full width */
+     height: 100%;
+    /* Full height */
+     overflow: auto;
+    /* Enable scroll if needed */
+     background-color: #474e5d;
+     padding-top: 50px;
+}
+/* Modal Content/Box */
+ .modal-content {
+     background-color: #fefefe;
+     margin: 5% auto 15% auto;
+    /* 5% from the top, 15% from the bottom and centered */
+     border: 1px solid #888;
+     width: 80%;
+    /* Could be more or less, depending on screen size */
+}
+/* The Modal Close Button (x) */
+ .close {
+     position: absolute;
+     right: 35px;
+     top: 15px;
+     font-size: 40px;
+     font-weight: bold;
+     color: #f1f1f1;
+}
+ .close:hover, .close:focus {
+     color: #f44336;
+     cursor: pointer;
+}
+/* Clear floats */
+ .clearfix::after {
+     content: "";
+     clear: both;
+     display: table;
+}
+/* Change styles for cancel button and delete button on extra small screens */
+ @media screen and (max-width: 300px) {
+     .cancelbtn, .deletebtn {
+         width: 100%;
+    }
+}
+ 

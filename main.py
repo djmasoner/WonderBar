@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta, date
 import logging
 import os
-from flask import Flask, render_template, request, Response, make_response, url_for, redirect
+from flask import Flask, render_template, request, Response, make_response, url_for, redirect, session
 import sqlalchemy
 from requests_oauthlib import OAuth2Session
 import json
@@ -11,7 +11,7 @@ from google.auth import jwt
 from google.auth.transport import requests
 import requests as requ
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, Table, event, select, func
 from sqlalchemy.orm import sessionmaker
 import constants
 import random
@@ -21,11 +21,16 @@ from random import seed, randint
 from sqlalchemy import MetaData, Table, Column, ForeignKey
 from sqlalchemy.ext.automap import automap_base
 from google.cloud import storage
+from google.cloud import secretmanager
 
 seed()
 
 app = Flask(__name__)
 
+secrets = secretmanager.SecretManagerServiceClient()
+
+app.secret_key = secrets.access_secret_version(request={"name": "projects/wonderbar-cs467/secrets/app_secret_key/versions/1"}).payload.data.decode("utf-8")
+# print (app.secret_key)
 # max items returned from a select query
 MAX_LIMIT = 25
 
@@ -35,6 +40,24 @@ CLOUD_STORAGE_BUCKET = "wonderbar-cs467.appspot.com"
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 logger = logging.getLogger()
+
+def logged_in():
+    if 'logged_in' in session:
+        id = session['user_id']
+        response = list_one('users', 'id', id)
+        if response.status_code == 200:
+            return True
+        else:
+            end_session()
+            return False
+    else:
+        return False
+
+def end_session():
+    if 'logged_in' in session:
+         session.pop('logged_in', None)
+         session.pop('user_id', None)
+         session.pop('user_type', None)
 
 # create select SQL statement
 # parameter table_name: name of the table being queried
@@ -96,24 +119,24 @@ def format_values(o, include_quotes=False):
         return o
 
 def createLinks(json_item, table_name, table_id):
-    json_item["self"] = constants.app_url  + table_name + "/" + table_id
+    json_item["self"] = constants.app_url  + "db" + table_name + "/" + table_id
     if table_name == 'projects':
-       json_item["users"] = constants.app_url  + table_name + "/" + table_id + "/users"
-       json_item["prompts"] = constants.app_url  + table_name + "/" + table_id + "/prompts"
-       json_item["locations"] = constants.app_url  + table_name + "/" + table_id + "/locations"
-       json_item["topics"] = constants.app_url  + table_name + "/" + table_id + "/topics"
-       json_item["observations"] = constants.app_url  + table_name + "/" + table_id + "/observations"
+       json_item["users"] = constants.app_url  + "db" + table_name + "/" + table_id + "/dbusers"
+       json_item["prompts"] = constants.app_url  +  "db" + table_name + "/" + table_id + "/dbprompts"
+       json_item["locations"] = constants.app_url  +  "db" + table_name + "/" +  table_id + "/dblocations"
+       json_item["topics"] = constants.app_url  + "db" +  table_name + "/" + table_id + "/dbtopics"
+       json_item["observations"] = constants.app_url  + "db" +  table_name + "/" + table_id + "/dbobservations"
 
     if table_name == 'users':
-       json_item["projects"] = constants.app_url  + table_name + "/" + table_id + "/projects"
-       json_item["observations"] = constants.app_url  + table_name + "/" + table_id + "/observations"
+       json_item["projects"] = constants.app_url  + "db" +  table_name + "/" + table_id + "/dbprojects"
+       json_item["observations"] = constants.app_url  +  "db" + table_name + "/" + table_id + "/dbobservations"
 
     if table_name == 'prompts':
-       json_item["observations"] = constants.app_url  + table_name + "/" + table_id + "/observations"
-       json_item["multientry_items"] = constants.app_url  + table_name + "/" + table_id + "/multientry_items"
+       json_item["observations"] = constants.app_url  +  "db" + table_name + "/" + table_id + "/dbobservations"
+       json_item["multientry_items"] = constants.app_url  +  "db" + table_name + "/" + table_id + "/dbmultientry_items"
 
     if table_name == 'classes':
-       json_item["users"] = constants.app_url  + table_name + "/" + table_id + "/users"
+       json_item["users"] = constants.app_url  + "db" +  table_name + "/" + table_id + "/dbusers"
 
     return json_item
 
@@ -161,10 +184,12 @@ def init_tcp_connection_engine(db_config):
     # Remember - storing secrets in plaintext is potentially unsafe. Consider using
     # something like https://cloud.google.com/secret-manager/docs/overview to help keep
     # secrets secret.
-    db_user = os.environ["DB_USER"]
-    db_pass = os.environ["DB_PASS"]
-    db_name = os.environ["DB_NAME"]
-    db_host = os.environ["DB_HOST"]
+
+    db_user = secrets.access_secret_version(request={"name": "projects/wonderbar-cs467/secrets/DB_USER/versions/1"}).payload.data.decode("utf-8")
+    db_pass = secrets.access_secret_version(request={"name": "projects/wonderbar-cs467/secrets/DB_PASS/versions/1"}).payload.data.decode("utf-8")
+    db_name = secrets.access_secret_version(request={"name": "projects/wonderbar-cs467/secrets/DB_NAME/versions/1"}).payload.data.decode("utf-8")
+    db_host = secrets.access_secret_version(request={"name": "projects/wonderbar-cs467/secrets/DB_HOST/versions/1"}).payload.data.decode("utf-8")
+
 
     # Extract host and port from db_host
     host_args = db_host.split(":")
@@ -193,11 +218,11 @@ def init_unix_connection_engine(db_config):
     # Remember - storing secrets in plaintext is potentially unsafe. Consider using
     # something like https://cloud.google.com/secret-manager/docs/overview to help keep
     # secrets secret.
-    db_user = os.environ["DB_USER"]
-    db_pass = os.environ["DB_PASS"]
-    db_name = os.environ["DB_NAME"]
+    db_user = secrets.access_secret_version(request={"name": "projects/wonderbar-cs467/secrets/DB_USER/versions/1"}).payload.data.decode("utf-8")
+    db_pass = secrets.access_secret_version(request={"name": "projects/wonderbar-cs467/secrets/DB_PASS/versions/1"}).payload.data.decode("utf-8")
+    db_name = secrets.access_secret_version(request={"name": "projects/wonderbar-cs467/secrets/DB_NAME/versions/1"}).payload.data.decode("utf-8")
     db_socket_dir = os.environ.get("DB_SOCKET_DIR", "/cloudsql")
-    cloud_sql_connection_name = os.environ["CLOUD_SQL_CONNECTION_NAME"]
+    cloud_sql_connection_name = secrets.access_secret_version(request={"name": "projects/wonderbar-cs467/secrets/CLOUD_SQL_CONNECTION_NAME/versions/1"}).payload.data.decode("utf-8")
 
     pool = sqlalchemy.create_engine(
         # Equivalent URL:
@@ -223,8 +248,15 @@ def init_unix_connection_engine(db_config):
 db = init_connection_engine()
 
 # produce MetaData object to load existing database (not being used right now)
+
+@event.listens_for(Table, "column_reflect")
+def column_reflect(inspector, table, column_info):
+    # set column.key = "attr_<lower_case_name>"
+    column_info['key'] = column_info['name']
+
+
 metadata = MetaData()
-metadata.reflect(db)
+metadata.reflect(bind=db)
 Base = automap_base(metadata=metadata)
 Base.prepare()
 activation_codes, users, teachers, projects, project_users,\
@@ -269,11 +301,172 @@ def generate_random_string(length):
 # routes start ------------------------------------------------------------------------------------------------------------------
 @app.route("/", methods=["GET"])
 def index():
-    return render_template('home.html')
+    logged_in()
+    return render_template('index.html')
 
 @app.route("/api", methods=["GET"])
 def api_info():
     return render_template('api.html')
+
+
+
+client_id = secrets.access_secret_version(request={"name": "projects/wonderbar-cs467/secrets/client_id/versions/1"}).payload.data.decode("utf-8")
+client_secret = secrets.access_secret_version(request={"name": "projects/wonderbar-cs467/secrets/client_secret/versions/1"}).payload.data.decode("utf-8")
+redirect_uri = secrets.access_secret_version(request={"name": "projects/wonderbar-cs467/secrets/redirect_uri_app/versions/1"}).payload.data.decode("utf-8")
+# redirect_uri = secrets.access_secret_version(request={"name": "projects/wonderbar-cs467/secrets/redirect_uri_local/versions/1"}).payload.data.decode("utf-8")
+auth_uri = secrets.access_secret_version(request={"name": "projects/wonderbar-cs467/secrets/auth_uri/versions/1"}).payload.data.decode("utf-8")
+
+scope = ['https://www.googleapis.com/auth/userinfo.email', 'openid', 'https://www.googleapis.com/auth/userinfo.profile']
+# oauth = OAuth2Session(client_id, redirect_uri=redirect_uri, scope=scope)
+
+@app.route('/oauth')
+def oauth():
+    oauth = OAuth2Session(client_id, redirect_uri=redirect_uri, scope=scope)
+
+    if logged_in():
+         return redirect(url_for('profile'))
+    authorization_url, state = oauth.authorization_url(
+        'https://accounts.google.com/o/oauth2/auth',
+        # access_type and prompt are Google specific extra
+        # parameters.
+        access_type="offline", prompt="select_account")
+    return redirect(authorization_url)
+
+@app.route('/logout')
+def logout():
+    if logged_in():
+        end_session()
+    return redirect(url_for('index'))
+
+
+
+@app.route('/login')
+def login():
+    oauth = OAuth2Session(client_id, redirect_uri=redirect_uri, scope=scope)
+    if logged_in():
+         return redirect(url_for('profile'))
+
+    token = oauth.fetch_token(
+        'https://accounts.google.com/o/oauth2/token',
+        authorization_response=request.url,
+        client_secret=client_secret)
+    req = requests.Request()
+
+    id_info = id_token.verify_oauth2_token( 
+    token['id_token'], req, client_id)
+
+    sub = id_info["sub"]
+
+
+    x = oauth.get('https://people.googleapis.com/v1/people/me?personFields=names,emailAddresses')
+    # print(x.json())
+    lastname = x.json()["names"][0]["familyName"]
+    firstname = x.json()["names"][0]["givenName"]
+    emailAddress = x.json()["emailAddresses"][0]["value"]
+    # birthday = x.json()["birthdays"]["date"][1]["year"] + "/" + json()["birthdays"]["date"][1]["month"] + "/" + x.json()["birthdays"]["date"][1]["day"]
+
+    try:
+        with db.connect() as conn:
+            # Execute the query and fetch all results
+            recent_users = conn.execute(
+                "SELECT id, username, first_name, last_name, user_type FROM users " "WHERE sub = %s", sub
+            ).fetchall()
+            # Convert the results into a list of dicts representing votes
+            # print(recent_users)
+            results = []
+            for v in recent_users:
+                project ={}
+                for column, value in v.items():
+                    project[column] = format_values(value)
+                results.append(project)
+            if len(results) > 0 :
+                session["user_id"] = (results[0]["id"])
+                session["user_type"] = (results[0]["user_type"])
+    except Exception as e:
+
+        logger.exception(e)
+        return Response(
+            status=500,
+            response=token['id_token'] + "\nUnable to successfully cast vote! Please check the "
+            "application logs for more details. '{}'".format(e),
+        )
+
+    if len(recent_users) == 0:
+        # return render_template("project_list.html", last_name = lastname, first_name =firstname, emailAddress=emailAddress)
+        messages = (json.dumps({"sub": sub, "last_name": lastname, "first_name": firstname, "emailAddress": emailAddress}))
+        return redirect(url_for('signup', messages=messages))
+
+    else:
+        session['logged_in'] = True
+        return redirect(url_for('profile'))
+
+
+@app.route("/profile", methods=["GET"])
+def profile():
+    if logged_in():
+        return render_template('profile.html')
+    return redirect(url_for('oauth'))
+
+@app.route("/addClass", methods=["GET"])
+def addClass():
+    if logged_in():
+        if 'user_type' in session:
+            if session['user_type'] == 'teacher':
+                return render_template('addClasses.html')
+            else:
+                return render_template('addClassesStudent.html')
+    return redirect(url_for('oauth'))
+
+
+@app.route("/addProject", methods=["GET"])
+def addProject():
+    if logged_in():
+        return render_template('createProject.html')
+    return redirect(url_for('oauth'))
+
+@app.route("/projects", methods=["GET", "POST"])
+def getProjects():
+    if logged_in():
+        return render_template('projects.html')
+    return redirect(url_for('oauth'))
+
+
+
+@app.route("/projects/<project_id>", methods=["GET"])
+def getProject(project_id):
+    if logged_in():
+        return render_template('indvproj.html')
+    return redirect(url_for('oauth'))
+
+@app.route('/signup', methods = ['GET'])
+def signup():
+    if logged_in():
+        return redirect(url_for('profile'))
+    params = json.loads(request.args['messages'])
+    # print(params)
+    sub = params["sub"]
+    lastname = params["last_name"]
+    firstname = params["first_name"]
+    emailAddress = params["emailAddress"]
+    return render_template('signup.html', sub = sub, last_name=lastname, first_name=firstname, emailAddress=emailAddress)
+
+@app.route("/empty", methods=["GET"])
+def empty():
+    return render_template('empty.html')
+
+@app.route("/tempProject", methods=["GET"])
+def tempProject():
+    return render_template('tempProject.html')
+
+@app.route("/teachers", methods=["GET"])
+def teachers():
+    return render_template('teachers.html')
+
+@app.route("/about", methods=["GET"])
+def about():
+    return render_template('about.html')
+
+# API routes start ------------------------------------------------------------------------------------------------------------------
 
 @app.route('/db<table_id>', methods = ['GET'])
 def get_items(table_id):
@@ -308,17 +501,33 @@ def get_item(table_id, project_id):
 
 @app.route('/db<table_id>', methods = ['POST'])
 def post_item(table_id):
-#    if "Authorization" not in request.headers:
-#        return Response(
-#            status=404,
-#            response=json.dumps({"Error":"Page does not exist"}),
-#        )
+
     if table_id not in constants.table_attributes.keys():
         return Response(
             status=404,
             response=json.dumps({"Error":"Page does not exist"}),
         )
-    return insert_item(table_id, constants.table_pks[table_id], constants.table_auto[table_id])
+
+
+    if logged_in():
+        if "Authorization" not in request.headers:
+           return Response(
+               status=403,
+               response=json.dumps({"Error":"Access Denied"}),
+           )
+        elif request.headers["Authorization"].split("Bearer ")[1] != str(session["user_id"]):
+           return Response(
+               status=403,
+               response=json.dumps({"Error":"Access Denied"}),
+           )
+        else:
+            return insert_item(table_id, constants.table_pks[table_id], constants.table_auto[table_id])
+    else:
+       return Response(
+           status=403,
+           response=json.dumps({"Error":"Access Denied"}),
+       )
+
 
 @app.route('/db<table_id>/<project_id>', methods = ['PATCH'])
 def patch_item(table_id, project_id):
@@ -347,6 +556,104 @@ def delete_item(table_id):
             response=json.dumps({"Error":"Page does not exist"}),
         )
     return delete_all(table_id)
+
+
+@app.route('/dbusers/<project_id>/dbschoolclasses')
+def get_school_classes(project_id):
+
+
+    # get limit and offset
+    try:
+        q_limit = min(int(request.args.get('limit', '0')),MAX_LIMIT)
+    except:
+        q_limit = MAX_LIMIT
+
+    try:
+        q_offset = int(request.args.get('offset', '0'))
+    except:
+        q_offset = 0
+
+    #get order by column or use default
+    q_order_by = (request.args.get('order_by', "id"))
+
+
+    stmt = """SELECT users.school, users.last_name, teachers.title, classes.* 
+        FROM classes
+        INNER JOIN users
+        ON classes.teacher_id = users.id
+        INNER JOIN teachers
+        ON teachers.user_id = users.id
+        WHERE users.school = (
+       SELECT school from users where users.id = (Select users.id from users where activation_code = (SELECT users.activation_code from users where users.id=""" + project_id + """) and user_type ='teacher') order by id limit 1)
+        and classes.id not in (SELECT class_id from enrollments where user_id=""" + project_id + ")"
+
+
+    # print(stmt)
+
+    # query database
+    try:
+        with db.connect() as conn:
+
+            count = conn.execute("""SELECT COUNT(*) FROM classes
+        INNER JOIN users
+        ON classes.teacher_id = users.id
+        WHERE users.school = (
+       SELECT school from users where users.id = (Select users.id from users where activation_code = (SELECT users.activation_code from users where users.id=""" + project_id + """) and user_type ='teacher') order by id limit 1)and classes.id not in (SELECT class_id from enrollments where user_id=""" + project_id + ")")
+            id_count =0
+            for v in count:
+                for column, value in v.items():
+                        id_count = value
+            if q_limit == 0:
+                # print(stmt + " order by " + q_order_by)
+                projects = conn.execute(
+                   stmt + " order by " + q_order_by
+                ).fetchall()
+            else:
+                projects = conn.execute(
+                   stmt + " order by " + q_order_by + " limit %s offset %s", q_limit, q_offset
+                ).fetchall()
+
+        results = []
+        for v in projects:
+            project ={}
+            for column, value in v.items():
+                project[column] = format_values(value)
+            project = createLinks(project, 'users', str(v[constants.table_pks['users']]))
+            results.append(project)
+
+        if len(results) < q_limit or q_limit==0:
+            next_set = None
+        else:
+            next_set = (constants.app_url  + 'users' + "/" + project_id + "/" + 'dbschoolclasses' + "?" + "order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset + q_limit))
+
+        if q_offset == 0:
+            prev_set = None
+        else:
+            prev_set = (constants.app_url  + 'users' + "/" + project_id + "/" + 'dbschoolclasses' + "?" + "order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset - q_limit))
+
+        all_projects=dict({"count":id_count, 
+                            "prev": prev_set, 
+                            "next": next_set, 
+                            "limit": q_limit,
+                            "offset": q_offset,
+                            "results":results})
+
+
+    except Exception as e:
+        logger.exception(e)
+        return Response(
+            status=500,
+            response="Unable to successfully cast vote! Please check the "
+            "application logs for more details. '{}'".format(e),
+        )
+
+
+    return Response(
+        status=200,
+        response=json.dumps(all_projects),
+
+        )
+
 
 @app.route('/db<table_id>/<project_id>', methods = ['DELETE'])
 def delete_items(table_id, project_id):
@@ -433,7 +740,7 @@ def get_other_table(table1_id, project_id, table2_id):
 
 
         stmt = "SELECT * FROM  prompts WHERE prompts.project_id=%s"
-        print(stmt)
+        # print(stmt)
 
         # query database
         try:
@@ -511,7 +818,7 @@ def get_other_table(table1_id, project_id, table2_id):
 
 
         stmt = "SELECT * FROM  classes WHERE classes.teacher_id=%s"
-        print(stmt)
+        # print(stmt)
 
         # query database
         try:
@@ -596,7 +903,7 @@ def get_other_table(table1_id, project_id, table2_id):
         INNER JOIN projects
         ON prompts.project_id = projects.id
         WHERE projects.id = %s"""
-        print(stmt)
+        # print(stmt)
 
         # query database
         try:
@@ -764,16 +1071,21 @@ def get_other_table(table1_id, project_id, table2_id):
 # routes end ------------------------------------------------------------------------------------------------------------------
 
 
-# @app.route('/upload', methods=['POST'])
+@app.route('/upload', methods=['POST'])
 def upload():
 
-    content = request.args.dict_of_lists()
+    # content = request.args.dict_of_lists()
     """Process the uploaded file and upload it to Google Cloud Storage."""
-    # uploaded_file = request.files.get('avatar')
+    for key in request.files.keys():
+        print(key)
+    uploaded_file = request.files['avatar']
+    # print(uploaded_file)
 
     if not uploaded_file:
-        return content
-
+        return Response(
+            status=404,
+            response=json.dumps({"Error": "invalid image"}),
+        )
     # Create a Cloud Storage client.
     gcs = storage.Client()
 
@@ -788,8 +1100,16 @@ def upload():
         content_type=uploaded_file.content_type
     )
 
+    print(blob.public_url)
     # The public URL can be used to directly access the uploaded file via HTTP.
-    return blob.public_url
+    # return blob.public_url
+
+    
+
+    return Response(
+        status=201,
+        response=json.dumps({"URL":blob.public_url}),
+    )
 
 
 @app.errorhandler(500)
@@ -822,20 +1142,33 @@ def list_all_general(table_name, order_by):
     # query database
     try:
         with db.connect() as conn:
-
-            count = conn.execute("SELECT COUNT(*) FROM " + table_name)
-            id_count =0
-            for v in count:
-                for column, value in v.items():
-                        id_count = value
-            if q_limit == 0:
-                projects = conn.execute(
-                   create_select(table_name) + " order by " + q_order_by
-                ).fetchall()
+            stmt = select([func.count()]).select_from(metadata.tables[table_name])
+            id_count = conn.execute(stmt).first().values()[0]
+            # id_count = count.first().values()[0]
+            # print(count)
+            # count = conn.execute("SELECT COUNT(*) FROM " + table_name)
+            # id_count =0
+            # for v in count:
+            #     for column, value in v.items():
+            #             id_count = value
+            if table_name == 'teachers':
+                if q_limit == 0:
+                    projects = conn.execute(
+                       create_select("Select users.* teachers.* from teachers inner join users on users.id = teachers.user_id") + " order by " + q_order_by
+                    ).fetchall()
+                else:
+                    projects = conn.execute(
+                       create_select("Select users.* teachers.* from teachers inner join users on users.id = teachers.user_id") + " order by " + q_order_by + " limit %s offset %s", q_limit, q_offset
+                    ).fetchall()
             else:
-                projects = conn.execute(
-                   create_select(table_name) + " order by " + q_order_by + " limit %s offset %s", q_limit, q_offset
-                ).fetchall()
+                if q_limit == 0:
+                    projects = conn.execute(
+                       create_select(table_name) + " order by " + q_order_by
+                    ).fetchall()
+                else:
+                    projects = conn.execute(
+                       create_select(table_name) + " order by " + q_order_by + " limit %s offset %s", q_limit, q_offset
+                    ).fetchall()
 
         results = []
         for v in projects:
@@ -879,7 +1212,7 @@ def list_all_general(table_name, order_by):
 
 
 def list_all_specific(table_name, primary_key, foreign_key, specific_id):
-    print(foreign_key)
+    # print(foreign_key)
     # q = session.query(users).all()
 
     # for row in q:
@@ -905,7 +1238,7 @@ def list_all_specific(table_name, primary_key, foreign_key, specific_id):
 
 
     stmt = "SELECT " + table_name + ".* FROM " + table_name + " INNER JOIN " + foreign_key[0] + " as x ON " + table_name + "." + constants.table_pks[table_name] + "=x." + foreign_key[1] + " WHERE " + "x." + foreign_key[2] + "=%s"
-    print(stmt)
+    # print(stmt)
 
     # query database
     try:
@@ -916,14 +1249,26 @@ def list_all_specific(table_name, primary_key, foreign_key, specific_id):
             for v in count:
                 for column, value in v.items():
                         id_count = value
-            if q_limit == 0:
-                projects = conn.execute(
-                   stmt + " order by " + q_order_by, specific_id
-                ).fetchall()
+
+            if table_name == 'teachers':
+                if q_limit == 0:
+                    projects = conn.execute(
+                       create_select("Select users.* teachers.* from teachers inner join users on users.id = teachers.user_id where id=" + specific_id) + " order by " + q_order_by
+                    ).fetchall()
+                else:
+                    projects = conn.execute(
+                       create_select("Select users.* teachers.* from teachers inner join users on users.id = teachers.user_id where id=" + specific_id) + " order by " + q_order_by + " limit %s offset %s", q_limit, q_offset
+                    ).fetchall()
             else:
-                projects = conn.execute(
-                   stmt + " order by " + q_order_by + " limit %s offset %s", specific_id, q_limit, q_offset
-                ).fetchall()
+
+                if q_limit == 0:
+                    projects = conn.execute(
+                       stmt + " order by " + q_order_by, specific_id
+                    ).fetchall()
+                else:
+                    projects = conn.execute(
+                       stmt + " order by " + q_order_by + " limit %s offset %s", specific_id, q_limit, q_offset
+                    ).fetchall()
 
         results = []
         for v in projects:
@@ -965,7 +1310,7 @@ def list_all_specific(table_name, primary_key, foreign_key, specific_id):
         response=json.dumps(all_projects),
     )
 
-def list_one(table_name, table_pk, key_val):
+def list_one(table_name, table_pk, key_val, post=False):
 
     table_pk = (request.args.get('key', table_pk))
 
@@ -974,9 +1319,14 @@ def list_one(table_name, table_pk, key_val):
     # query database
     try:
         with db.connect() as conn:
-            projects = conn.execute(
-               stmt, key_val
-            ).fetchall()
+            if table_name == 'teachers':
+                projects = conn.execute(
+                   "Select users.*, teachers.* from teachers inner join users on users.id=teachers.user_id where " + table_pk + "=%s", key_val
+                ).fetchall()
+            else: 
+                projects = conn.execute(
+                   stmt, key_val
+                ).fetchall()
 
         if len(projects) == 0:
             return Response(
@@ -1000,11 +1350,16 @@ def list_one(table_name, table_pk, key_val):
             "application logs for more details. '{}'".format(e),
         )
 
-
-    return Response(
-        status=200,
-        response=json.dumps(project),
-    )
+    if post:
+        return Response(
+            status=201,
+            response=json.dumps(project),
+        )
+    else:
+        return Response(
+            status=200,
+            response=json.dumps(project),
+        )
 
 
 
@@ -1020,7 +1375,7 @@ def update_item(table_name, table_pk, key_val):
             )
 
         stmt = create_update(table_name, content) + " WHERE " + table_pk + "=%s"
-        print(stmt)
+        # print(stmt)
         # query database
         try:
             with db.connect() as conn:
@@ -1154,11 +1509,12 @@ def delete_all_specific(table1_name, table1_pk, table2_name):
 
 def insert_item(table_name, table_pk, auto_inc=True, valuesDict={}):
     empty = (request.get_data().decode("utf-8") == "")
-
+    # print(request.get_data().decode("utf-8"))
     if empty:
         content = valuesDict
     else:
         content = request.get_json()
+        # print(content)
         if content == None:
             content = valuesDict
         elif valuesDict != None:
@@ -1168,6 +1524,7 @@ def insert_item(table_name, table_pk, auto_inc=True, valuesDict={}):
     # print(content)
     # print(content)
     if content != None:
+        teacher_content={}
         if table_name != "users":
             error_list = verify_contents(content, constants.table_attributes[table_name], constants.table_attributes_optional[table_name])
             if error_list:
@@ -1202,12 +1559,14 @@ def insert_item(table_name, table_pk, auto_inc=True, valuesDict={}):
                         status=400,
                         response=json.dumps({"Error": "The request object contains invalid attributes or is missing attributes: " + ", ".join(error_list)}),
                     )
-
+                # print(content)
                 for key in constants.table_attributes["teachers"]:
                     if key in content.keys():
-                        teacher_content = {key: content[key]}
+                        print(key)
+                        teacher_content[key] = content[key]
+                        print(teacher_content)
                         content.pop(key, None)
-                content['activation_code'] = generate_random_string(randint(10, 15))
+                content['activation_code'] = generate_random_string(randint(15, 20))
                 stmt = create_select('activation_codes') + " WHERE activation_code" + "=%s"
                 end = 6
                 while end:
@@ -1233,30 +1592,40 @@ def insert_item(table_name, table_pk, auto_inc=True, valuesDict={}):
 
 
         stmt = create_insert(table_name, content)
-
+        # print(str(metadata.tables[table_name].insert(), [content]))
+        new_id = ""
         try:
             with db.connect() as conn:
-                projects = conn.execute(
-                   stmt
-                )
+                # projects = conn.execute(
+                #    stmt
+                # )
+                # data = []
+                # data.append(content)
+                ins = metadata.tables[table_name].insert()
+                projects = conn.execute(ins.values(content))
 
-            # new_id = conn.insert_id()
+            new_id = projects.inserted_primary_key[0]
+            sel = select([metadata.tables[table_name]]).where(metadata.tables[table_name].columns[table_pk] == new_id)
             if auto_inc:
-                stmt = create_select(table_name) + " WHERE " + table_pk + "=(SELECT LAST_INSERT_ID())"
+                stmt = create_select(table_name) + " WHERE " + table_pk + "=" + str(projects.inserted_primary_key[0])
             else:
                 stmt = create_select(table_name) + " WHERE " + table_pk + "=\"" + content[table_pk] + "\""
             # query database
             try:
                 with db.connect() as conn:
                     projects = conn.execute(
-                       stmt
+                       sel
                     )
+                print(projects.rowcount)
+                project ={}
                 for v in projects:
-
-                    project ={}
+                    print(v)
                     for column, value in v.items():
                         project[column] = format_values(value)
-                    project = createLinks(project, table_name, str(v[table_pk]))
+                    new_id = v[table_pk]
+                    print("before lnks: " + json.dumps(project))
+                    project = createLinks(project, table_name, str(new_id))
+                    print("after lnks: " + json.dumps(project))
 
             except Exception as e:
                 logger.exception(e)
@@ -1268,10 +1637,9 @@ def insert_item(table_name, table_pk, auto_inc=True, valuesDict={}):
 
             if table_name == 'users' and (content["user_type"] == "teacher"):
 
-                teacher_content["user_id"] = v[table_pk]
-
+                teacher_content["user_id"] = int(new_id)
                 stmt = create_insert('teachers', teacher_content)
-                print(stmt)
+                # print(stmt)
                 try:
                     with db.connect() as conn:
                         projects = conn.execute(
@@ -1303,130 +1671,18 @@ def insert_item(table_name, table_pk, auto_inc=True, valuesDict={}):
             "application logs for more details.",
         )
 
-
     return Response(
         status=201,
         response=json.dumps(project),
     )
 
-f = open('client_id.json', 'r')
-data = json.load(f)
-client_id = data["web"]["client_id"]
-client_secret = data["web"]["client_secret"]
-redirect_uri = data["web"]["redirect_uris"][0]
-auth_uri = data["web"]["auth_uri"]
-f.close()
-
-client_id = client_id
-client_secret = client_secret
-redirect_uri = redirect_uri
-scope = ['https://www.googleapis.com/auth/userinfo.email', 'openid', 'https://www.googleapis.com/auth/userinfo.profile']
-oauth = OAuth2Session(client_id, redirect_uri=redirect_uri,
-                          scope=scope)
-
-
-@app.route('/oauth')
-def index2():
-    authorization_url, state = oauth.authorization_url(
-        'https://accounts.google.com/o/oauth2/auth',
-        # access_type and prompt are Google specific extra
-        # parameters.
-        access_type="offline", prompt="select_account")
-    return redirect(authorization_url)
-
-@app.route('/login')
-def jwt2():
-
-
-    token = oauth.fetch_token(
-        'https://accounts.google.com/o/oauth2/token',
-        authorization_response=request.url,
-        client_secret=client_secret)
-    req = requests.Request()
-
-    id_info = id_token.verify_oauth2_token( 
-    token['id_token'], req, client_id)
-
-    sub = id_info["sub"]
-
-
-    x = oauth.get('https://people.googleapis.com/v1/people/me?personFields=names,emailAddresses')
-    print(x.json())
-    lastname = x.json()["names"][0]["familyName"]
-    firstname = x.json()["names"][0]["givenName"]
-    emailAddress = x.json()["emailAddresses"][0]["value"]
-    # birthday = x.json()["birthdays"]["date"][1]["year"] + "/" + json()["birthdays"]["date"][1]["month"] + "/" + x.json()["birthdays"]["date"][1]["day"]
-
-    try:
-        with db.connect() as conn:
-            # Execute the query and fetch all results
-            recent_users = conn.execute(
-                "SELECT username, first_name, last_name FROM users " "WHERE sub = %s", sub
-            ).fetchall()
-            # Convert the results into a list of dicts representing votes
-            print(recent_users)
-    except Exception as e:
-
-        logger.exception(e)
-        return Response(
-            status=500,
-            response=token['id_token'] + "\nUnable to successfully cast vote! Please check the "
-            "application logs for more details. '{}'".format(e),
-        )
-
-    if len(recent_users) == 0:
-        # return render_template("project_list.html", last_name = lastname, first_name =firstname, emailAddress=emailAddress)
-        messages = (json.dumps({"sub": sub, "last_name": lastname, "first_name": firstname, "emailAddress": emailAddress}))
-        return redirect(url_for('signup', messages=messages))
-
-    else:
-         return redirect(url_for('home'))
-
-
-@app.route("/home", methods=["GET"])
-def home():
-
-    return render_template('profile.html')
-
-
-@app.route('/signup', methods = ['GET'])
-def signup():
-    params = json.loads(request.args['messages'])
-    # print(params)
-    sub = params["sub"]
-    lastname = params["last_name"]
-    firstname = params["first_name"]
-    emailAddress = params["emailAddress"]
-    return render_template('signup.html', sub = sub, last_name=lastname, first_name=firstname, emailAddress=emailAddress)
-
 @app.route('/signup', methods = ['POST'])
 def worknow():
     valuesDict = {}
 
-    # token = oauth.fetch_token(
-    #     'https://accounts.google.com/o/oauth2/token',
-    #     authorization_response=request.url,
-    #     client_secret=client_secret)
-    # req = requests.Request()
-
-    # id_info = id_token.verify_oauth2_token( 
-    # token['id_token'], req, client_id)
-
-    # valuesDict["sub"]  = id_info["sub"]
-    # params = json.loads(request.args['sub'])
-    # print(params)
-    # sub = params["sub"]
-
-
-    # x = oauth.get('https://people.googleapis.com/v1/people/me?personFields=names,emailAddresses')
-    # print(x.json())
-    # lastname = x.json()["names"][0]["familyName"]
-    # firstname = x.json()["names"][0]["givenName"]
-    # emailAddress = x.json()["emailAddresses"][0]["value"]
-
-
     valuesDict["user_type"] = request.form['user_type']
     valuesDict["sub"] = request.form['sub']
+    # print(valuesDict["sub"])
     valuesDict["first_name"] = request.form['first_name']
     valuesDict["last_name"] = request.form['last_name']
     birthdate = request.form['birthdate']
@@ -1443,22 +1699,29 @@ def worknow():
         valuesDict["teaching_certification_id"] = request.form['teaching_certification_id']
         valuesDict["title"] = request.form['title']
 
-    print(valuesDict)
+    # print(valuesDict)
 
 
     response = insert_item('users', 'id', auto_inc=True, valuesDict=valuesDict)
-    print (response.status)
+    # print (response.status)
 
     if response.status_code == 201:
-        # return render_template("project_list.html", last_name = lastname, first_name =firstname, emailAddress=emailAddress)
-        return render_template('profile.html')
 
+        # return render_template("project_list.html", last_name = lastname, first_name =firstname, emailAddress=emailAddress)
+        session['logged_in'] = True
+        # print(json.loads(response.data))
+        session["user_id"] = json.loads(response.data)["id"]
+        session["user_type"] = json.loads(response.data)["user_type"]
+        # print (session["user_id"])
+
+        return redirect(url_for('addClass'))
     else:
-         return redirect(url_for('index2'))
+         return redirect(url_for('oauth'))
     # return Response(
     #     status=200,
     #     response="User successfully added '{}' at time!".format(valuesDict["username"]),
     # )
+
 
 
 if __name__ == "__main__":

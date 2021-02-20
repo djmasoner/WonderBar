@@ -1,0 +1,72 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/static/css/main.css" />
+    <title>WonderBar - About</title>
+</head>
+
+<body>
+    <div id="mainContent">
+        <header class="masthead mb-auto">
+            <div class="inner">
+                <h3 class="masthead-brand">WonderBar</h3>
+                <nav class="nav nav-masthead justify-content-center">
+                    <a class="nav-link" href="/">Home</a>
+                    <a class="nav-link" href="/projects">Projects</a>
+            {% if session['user_type'] == 'teacher' %}
+                    <a class="nav-link" href="/teachers">Teachers</a>
+            {% endif %}
+                    <a class="nav-link" href="/profile">Profile</a>
+                    <a class="nav-link active" href="/about">About</a>
+            {% if session['logged_in'] %}
+                    <a class="nav-link" href="/logout">Logout</a>
+            {% else %}
+                    <a class="nav-link" href="/oauth">Login</a>
+            {% endif %}
+                </nav>
+            </div>
+        </header>
+
+        <div id="mainContent-wrap">
+            <div id="background">
+                <img src="Resources/forest-background.jpg" alt="">
+            </div>
+            <div class="about-text">
+                <h1>What is WonderBar?</h1>
+                <p>
+                    This app was designed so that students and teachers
+                    alike can benefit from the collective knowledge of all
+                    active learners. At WonderBar, you can explore new
+                    projects, or add your own, while contributing to a shared
+                    database of information that facilitates learning and discovery.
+                    Come on in and start exploring!
+                </p>
+                <h1>What is Citizen Science?</h1>
+                <p>
+                    Citizen science also known as community science, crowd science, 
+                    crowd-sourced science, civic science, or volunteer monitoring is 
+                    scientific research conducted, in whole or in part, by amateur scientists. 
+                    Citizen science is sometimes described as "public participation in 
+                    scientific research," participatory monitoring, and participatory 
+                    action research whose outcomes are often advancements in scientific 
+                    research by improving the scientific communities capacity, as well as 
+                    increasing the public's understanding of science.
+                </p>
+                <a class="info-btn" href="https://www.citizenscience.gov/">
+                    For More Information Visit CitizenScience.gov
+                </a>
+            </div>
+        </div>
+
+        <footer id="footer">
+            <ul id="footerList">
+                <li><p>Programmed by Monique Glasgow, Diana Masoner, and Sydney Walter</p></li>
+                <li style="float:right"><a href="/empty">Site Map</a></li>
+            </ul>
+        </footer>
+    </div>
+</body>
+</html>
