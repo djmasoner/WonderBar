@@ -1,0 +1,268 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<script src="/static/scripts/createProject.js"></script>
+		<link rel="stylesheet" type="text/css" href="/static/css/main.css" />
+		<link rel="stylesheet" type="text/css" href="/static/css/projects.css" />
+		<link rel="stylesheet" type="text/css" href="/static/css/createProject.css" />
+		<title>WonderBar - Make A Project</title>
+	</head>
+	<body>
+    <div id="mainContent">
+        <header class="masthead mb-auto">
+            <div class="inner">
+                <h3 class="masthead-brand">WonderBar</h3>
+                <nav class="nav nav-masthead justify-content-center">
+                    <a class="nav-link" href="/">Home</a>
+                    <a class="nav-link active" href="/projects">Projects</a>
+            
+                    <a class="nav-link" href="/profile">Profile</a>
+                    <a class="nav-link" href="/about">About</a>
+            
+                    <a class="nav-link" href="/oauth">Login</a>
+            
+                </nav>
+            </div>
+        </header>
+        <div id="mainContent-wrap">
+			<form id="regForm" action="/projects" method="post">
+				<input hidden type="text" id="user_id" value=""></input>
+				<input hidden type="text" id="user_type" value=""></input>
+				<!-- One "tab" for each step in the form: -->
+				<div class="project">
+				<div class="tab" id="basic_project_info">
+		            <div class="projectTitle">
+                        <div class="row">
+                            <div class="left-column">
+                                <h1>Create Project</h1>
+                                <h2>Basic Info</h2>
+                            </div>
+                            <div class="right-column">
+                                <p>Enter the basic information about your project below. The project name, short description, and avatar are what the students will first see. Get creative!</p>
+                            </div>
+                        </div>
+          		 	 </div>
+	            	<div class="projectContent">
+						<div class="row">
+							<div class="left-column">
+								<label for="project_name">Project Name</label>
+							</div>
+							<div class="right-column">
+								<p><input type="text" placeholder="Project name (5 - 100 characters)" name="project_name" id="project_name" onfocusout="confirmUnique('project_name', 'Project name', 'projects', 'name')"></p>
+							</div>
+						</div>
+						<div class="row">
+							<div class="left-column">
+								<label for="project_short_desc">Project Short Description</label>
+							</div>
+							<div class="right-column">
+								<p><textarea rows="2"  name="project_short_desc" form="regForm" placeholder="Enter short description here..." id="project_short_desc"></textarea></p>
+							</div>
+						</div>
+						<div class="row">
+							<div class="left-column">
+								<label for="project_long_desc">Project Long Description</label>
+							</div>
+							<div class="right-column">
+								<p><textarea rows="4" name="project_long_desc" form="regForm" placeholder="Enter long description here..." id="project_long_desc"></textarea></p>
+							</div>
+						</div>
+						<div class="row">
+							<div class="left-column">
+								<!-- <p>Project Avatar</p> -->
+								<label for="deleteImage">Project Avatar</label>
+							</div>
+							<div class="right-column" id="project_avatar">
+								<input type="file" id="avatar" name="avatar" accept="image/*" onchange="updateImage(event)">
+								<div class="right-column">
+									<label for="avatar" id="avatar_label" style="display:none"><img src="" alt="" id="avatarImage"></label>
+								</div>
+								<div class="left-column">
+									<input type="button" id="deleteImage" value="Remove" onclick="deleteFile()" style="display:none">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="tab" id="proj_topics">
+		            <div class="projectTitle">
+                        <div class="row">
+                            <div class="left-column">
+                                <h1>Create Project</h1>
+                                <h2>Topics</h2>
+                            </div>
+                            <div class="right-column">
+                                <p>Select the topics that apply to this project. The students will be able to filter the projects using these topics.</p>
+                            </div>
+                        </div>
+					</div>
+				</div>
+				<div class="tab" id="proj_locations">
+		            <div class="projectTitle">
+                        <div class="row">
+                            <div class="left-column">
+                                <h1>Create Project</h1>
+                                <h2>Locations</h2>
+                            </div>
+                            <div class="right-column">
+                                <p>Select the ideal locations to make observations for this project. The students will be able to filter the projects using these locations.</p>
+                            </div>
+                        </div>
+					</div>
+				</div>
+				<div class="tab">
+		            <div class="projectTitle">
+                        <div class="row">
+                            <div class="left-column">
+                                <h1>Create Project</h1>
+                                <h2>Materials</h2>
+                            </div>
+                            <div class="right-column">
+                                <p>Add the materials needed to make observations for this project.</p>
+                            </div>
+                        </div>
+					</div>
+	            	<div class="projectContent">
+						<div class="add-material-form">
+							<div class="row">
+								<div class="left-column">
+									<label for="material_name">Name</label>
+								</div>
+								<div class="right-column">
+									<input placeholder="Enter material name..."  type="text" name="material_name" id="material_name">
+								</div>
+							</div>
+							<div class="row">
+								<div class="left-column">
+									<label for="material_quantity">Quantity</label>
+								</div>
+								<div class="right-column">
+									<input placeholder="Enter material quantity (e.g. 1 tsp, 10, 4 ft)..." type="text" name="material_quantity" id="material_quantity">
+								</div>
+							</div>
+							<div class="row">
+								<input type="button" value="Add" onclick="addMaterial('materialsTable')"/>
+							</div>
+						</div>
+						<div id="added-materials-div">
+							<hr>
+							<TABLE id="materialsTable" style="width: 100%">
+								<colgroup>
+									<col span="1" style="width: 5%;">
+									<col span="1" style="width: 42.5%;">
+									<col span="1" style="width: 42.5%;">
+								</colgroup>
+								<thead>
+									<tr>
+										<th></th>
+										<th>Material</th>
+										<th>Quantity</th>
+									</tr>
+								</thead>
+								<tbody id="materials-tbody">
+								</tbody>
+							</TABLE>
+						</div>
+					</div>
+				</div>
+				<div class="tab">
+		            <div class="projectTitle">
+                        <div class="row">
+                            <div class="left-column">
+                                <h1>Create Project</h1>
+                                <h2>Prompts</h2>
+                            </div>
+                            <div class="right-column">
+                                <p>Add the prompts for this project. The prompts will tell the student exactly what they need to do and what type of response is required to make their observation. </p>
+                            </div>
+                        </div>
+					</div>
+	            	<div class="projectContent">
+						<div class="add-prompt-form">
+							<div class="row">
+								<div class="left-column">
+									<label for="prompt_subheading">Category</label>
+								</div>
+								<div class="right-column">
+									<input placeholder="Enter prompt category (used to group similar prompts)..."  type="text" name="prompt_subheading" id="prompt_subheading">
+								</div>
+							</div>
+							<div class="row">
+								<div class="left-column">
+									<label for="prompt_description">Description</label>
+								</div>
+								<div class="right-column">
+									<textarea rows="4" type="text" id="prompt_description" name="prompt_description" form="regForm" placeholder="Enter prompt description..."></textarea>
+									<!-- <textarea> placeholder="Enter prompt description..." type="text" name="prompt_description" id="prompt_description"></textarea> -->
+								</div>
+							</div>
+							<div class="row">
+								<div class="left-column">
+									<label for="prompt_response_type">Type</label>
+								</div>
+								<div class="right-column" id="prompt_options">
+									<select required name="prompt_response_type" id="prompt_response_type" onchange="getOptions()">
+										<option id="default_type" value="" disabled selected>Select response type</option>
+									</select>
+								</div>
+							</div>
+							<div class="row" id="response_options" style="display: none">
+								<div class="left-column">
+									<label for="add-options">Options</label>
+								</div>
+								<div class="right-column" id="add-options">
+									<input type="text" placeholder="Enter options (pipe-delimited e.g. Sunny|Rainy|Cloudy)" id="prompt_responses">
+								</div>
+							</div>
+							<div class="row">
+								<input type="button" value="Add" onclick="addPrompt('promptTable')"/>
+							</div>
+						</div>
+						<div id="addedPrompts">
+							<hr>
+						</div>
+					</div>
+				</div>
+				<div class="tab">
+		            <div class="projectTitle">
+						<h1>Create Project</h1>
+						<h2>Project Submitted Successfully! </h2>
+					</div>
+		            <div class="projectContent">
+						<a href="/addProject"><input type="button" value="Make Another Project"/></a>
+						<a href="/profile"><input type="button" value="My Profile"/></a>
+						<a href="/projects"><input type="button" value="Projects"/></a>
+					</div>
+				</div>
+
+			</div>
+				<div style="overflow:auto;">
+					<hr>
+					<div style="float:right;">
+						<button type="button" id="prevBtn" onclick="nextPrev(-1)">Previous</button>
+						<button type="button" id="nextBtn" onclick="nextPrev(1)">Next</button>
+					</div>
+				</div>
+				<!-- Circles which indicates the steps of the form: -->
+				<div style="text-align:center;margin-top:40px;">
+					<span class="step"></span>
+					<span class="step"></span>
+					<span class="step"></span>
+					<span class="step"></span>
+					<span class="step"></span>
+				</div>
+			</form>
+		</div>
+        <footer id="footer">
+            <ul id="footerList">
+                <li><p>Programmed by Monique Glasgow, Diana Masoner, and Sydney Walter</p></li>
+                <li style="float:right"><a href="/empty">Site Map</a></li>
+            </ul>
+        </footer>
+    </div>
+	</body>
+</html>

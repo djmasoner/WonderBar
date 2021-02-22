@@ -20,14 +20,6 @@
 	background-color: white;
 }
 
-#map {
-    width: 500px;
-    height: 500px;
-	width: 100%;
-	border: 1px solid var(--grey3);
-
-}
-
 input[type=text],
 input[type=file],
 textarea,
@@ -132,9 +124,7 @@ button:hover {
 .right-column {
 	float: left;
 	width: 80%;
-	margin-top: 25px;
-	color: white;
-	text-align: center;
+	margin-top: 6px;
 }
 
 .row {

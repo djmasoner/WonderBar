@@ -4,117 +4,115 @@
     <meta charset="utf-8">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/indexStyle.css') }}" />
-    <title>WonderBar</title>
+    <link rel="stylesheet" href="CSS\main.css" />
+    <link rel="stylesheet" href="CSS\projects.css" />
+    <title>WonderBar - Projects</title>
 </head>
 
 <body>
-    <div id="page">
-
-        <div id="header">
-            <div id="headerTitle">WonderBar</div>
-            <div id="headerSubText">A Citizen Science Application</div>
-        </div>
-
-        <ul class="navBar">
-            <li><a href="home.html">Home</a></li>
-            <li class="activeTab"><a href="#">Projects</a></li>
-            <li><a href="#">Teachers</a></li>
-            <li><a href="#">About</a></li>
-            <li style="float:right"><a href="#">Login</a></li>
-        </ul>
-
-        <div class="mainContent">
-            <div class="project">
-                <div class="projectTitle">
-                    <h1>Demo Project One</h1>
-                    <h2>Professor W.</h2>
-                </div>
-                <div class="projectContent">
-                    <div class="projectImage">
-                        <img src="https://i.imgur.com/65oxaZF.jpg" alt="Placeholder">
-                    </div>
-                    <div class="projectText">
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-                            ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                            laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
-                            voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                        </p>
-                    </div>
-                </div>
+    <div id="mainContent">
+        <header class="masthead mb-auto">
+            <div class="inner">
+                <h3 class="masthead-brand">WonderBar</h3>
+                <nav class="nav nav-masthead justify-content-center">
+                    <a class="nav-link" href="index.html">Home</a>
+                    <a class="nav-link active" href="projects.html">Projects</a>
+                    <a class="nav-link" href="teachers.html">Teachers</a>
+                    <a class="nav-link" href="profile.html">Profile</a>
+                    <a class="nav-link" href="about.html">About</a>
+                    <a class="nav-link" href="login.html">Login</a>
+                </nav>
             </div>
+        </header>
 
-            <div class="project">
-                <div class="projectTitle">
-                    <h1>Demo Project Two</h1>
-                    <h2>Professor x.</h2>
-                </div>
-                <div class="projectContent">
-                    <div class="projectImage">
-                        <img src="https://i.imgur.com/65oxaZF.jpg" alt="Placeholder">
-                    </div>
-                    <div class="projectText">
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-                            ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                            laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
-                            voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat 
-                            non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                        </p>
-                    </div>
-                </div>
+        <div id="mainContent-wrap">
+            <div class="project-buttons">
+                <a href="#">Find A Project</a>
+                <a href="#">Make A Project</a>
             </div>
-
-            <div class="project">
-                <div class="projectTitle">
-                    <h1>Demo Project Three</h1>
-                    <h2>Professor Y.</h2>
-                </div>
-                <div class="projectContent">
-                    <div class="projectImage">
-                        <img src="https://i.imgur.com/65oxaZF.jpg" alt="Placeholder">
-                    </div>
-                    <div class="projectText">
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-                            ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                            laboris nisi ut aliquip ex ea commodo consequat.
-                        </p>
-                    </div>
-                </div>
+            <div class="projects-header">
+                <h1>Recent Projects</h1>
             </div>
+            <div id="recent-project-list">
+                <div class="project">
+                    <a href="tempProject.html">
+                        <div class="projectTitle">
+                            <h1>Christmas Bird Count</h1>
+                            <h2>Professor W.</h2>
+                        </div>
+                        <div class="projectContent">
+                            <div class="projectImage">
+                                <img src="Resources\bird1.jpg" alt="Placeholder">
+                            </div>
+                            <div class="projectText">
+                                <p>
+                                    The Christmas Bird Count is an annual census of birds organized by the Audubon Society 
+                                    and conducted by volunteer birders around the United States. Data from the count revealed 
+                                    climate change is causing a reduction in the population of birds. Since 2009, they've 
+                                    released a number of surveys and studies that investigate and illustrate how global 
+                                    warming is disrupting the environment.
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
 
-            <div class="project">
-                <div class="projectTitle">
-                    <h1>Demo Project Four</h1>
-                    <h2>Professor Z.</h2>
-                </div>
-                <div class="projectContent">
-                    <div class="projectImage">
-                        <img src="https://i.imgur.com/65oxaZF.jpg" alt="Placeholder">
+                <div class="project">
+                    <div class="projectTitle">
+                        <h1>Project Budburst</h1>
+                        <h2>Professor X.</h2>
                     </div>
-                    <div class="projectText">
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-                            ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                            laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
-                            voluptate velit esse cillum dolore eu fugiat nulla pariatur.Excepteur sint occaecat cupidatat
-                            non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum 
-                            dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et 
-                            dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi 
-                            ut aliquip ex ea commodo consequat.
-                        </p>
+                    <div class="projectContent">
+                        <div class="projectImage">
+                            <img src="Resources\flower1.jpg" alt="Placeholder">
+                        </div>
+                        <div class="projectText">
+                            <p>
+                                At Budburst, we believe that the beauty of nature should be enjoyed by all of us. That’s why 
+                                we bring together researchers, educators, and community scientists to help answer important 
+                                questions around the effects of climate change on plants and animals—and how we can mitigate 
+                                those effects.
+                            </p>
+                        </div>
                     </div>
                 </div>
+
+                <div class="project">
+                    <div class="projectTitle">
+                        <h1>Appalachian View Guides</h1>
+                        <h2>Professor Y.</h2>
+                    </div>
+                    <div class="projectContent">
+                        <div class="projectImage">
+                            <img src="Resources\mountain.jpg" alt="Placeholder">
+                        </div>
+                        <div class="projectText">
+                            <p>
+                                The relationships between pollution, respiratory health, and exercise aren't fully understood. 
+                                While air quality data helps scientists understand how pollutants affect breathing, a limited 
+                                pool of data means they don't have the full picture. Those dedicated to preserving the Earth 
+                                can volunteer to help.
+                            </p>
+                            <p>
+                                Appalachian Mountain Club's view guides are volunteer hikers who measure visibility from trails. 
+                                Combined with local health information, scientists use the visibility data collected to better 
+                                understand the relationship between haze, pollution, and the effectiveness of exercise. The Club 
+                                also publishes reports on the visibility of specific hikes, allowing people to plan their trips 
+                                in and through Appalachia.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
 
-        <ul id="footer">
-            <li><p>Programmed by Monique Glasgow, Diana Masoner, and Sydney Walter</p></li>
-            <li style="float:right"><a href="#">Site Map</a></li>
-        </ul>
+        <footer id="footer">
+            <ul id="footerList">
+                <li><p>Programmed by Monique Glasgow, Diana Masoner, and Sydney Walter</p></li>
+                <li style="float:right"><a href="empty.html">Site Map</a></li>
+            </ul>
+        </footer>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
 </body>
 </html>
