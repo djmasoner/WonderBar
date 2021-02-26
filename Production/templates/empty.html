@@ -1,0 +1,46 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/static/css/main.css" />
+    <title>WonderBar - Empty</title>
+</head>
+
+<body>
+    <div id="mainContent">
+        <header class="masthead mb-auto">
+            <div class="inner">
+                <h3 class="masthead-brand">WonderBar</h3>
+                <nav class="nav nav-masthead justify-content-center">
+                    <a class="nav-link" href="/">Home</a>
+                    <a class="nav-link" href="/projects">Projects</a>
+            {% if session['user_type'] == 'teacher' %}
+                    <a class="nav-link" href="/teachers">Teachers</a>
+            {% endif %}
+                    <a class="nav-link" href="/profile">Profile</a>
+                    <a class="nav-link" href="/about">About</a>
+
+            {% if session['logged_in'] %}
+                    <a class="nav-link" href="/logout">Logout</a>
+            {% else %}
+                    <a class="nav-link" href="/oauth">Login</a>
+            {% endif %}
+                </nav>
+            </div>
+        </header>
+
+        <div id="mainContent-wrap">
+            <!-- all other page content -->
+        </div>
+
+        <footer id="footer">
+            <ul id="footerList">
+                <li><p>Programmed by Monique Glasgow, Diana Masoner, and Sydney Walter</p></li>
+                <li style="float:right"><a href="/empty">Site Map</a></li>
+            </ul>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,147 @@
+
+.signup-form {
+    margin-top: 40px;
+    width: 75%;
+    display: inline-block;
+}
+
+.signup {
+    background: var(--theme3);
+    margin-top: 15px;
+    padding: 5px;
+    width: 70%;
+    margin: 25px auto;
+    border-radius: 20px;
+}
+
+.signupTitle {
+    margin: 15px;
+}
+
+.signupTitle h1 {
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--grey3);
+}
+
+.signupTitle h2 {
+    margin-top: 5px;
+    font-size: 18px;
+    color: white;
+}
+
+.signupContent {
+    background: var(--theme1);
+    display: flex;
+    border-radius: 15px;
+}
+
+.usertype-radio {
+    margin: Auto;
+}
+
+.usertype-radio input[type="radio"] {
+  opacity: 0;
+  position: fixed;
+  width: 0;
+}
+
+.usertype-radio label {
+    display: inline-block;
+    background-color: var(--grey1);
+    color: black;
+    padding: 10px 20px;
+    font-family: sans-serif, Arial;
+    font-size: 16px;
+    font-weight: bold;
+    border: 3px solid var(--grey2);
+    border-radius: 8px;
+    width: 30%;
+    margin-right: 20px;
+}
+
+
+.usertype-radio label:hover {
+    background-color: white;
+    border: 3px solid var(--grey3);
+}
+
+
+.usertype-radio input[type="radio"]:focus + label {
+    background-color: var(--theme2);
+    border: 3px solid var(--theme3);
+    color: var(--theme4);
+}
+
+.usertype-radio input[type="radio"]:checked + label {
+    background-color: var(--theme2);
+    border: 3px solid var(--theme3);
+    color: var(--theme4);
+}
+/* Set a style for all buttons */
+input[type=submit] {
+    background-color: var(--theme3);
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
+input[type=submit]:hover {
+    opacity: 0.7;
+}
+
+input[type=text], input[type=password], input[type=date], select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+}
+
+label {
+  padding: 12px 12px 12px 0;
+  display: inline-block;
+  float: left;
+}
+
+.left-column {
+  float: left;
+  width: 25%;
+  margin-top: 6px;
+}
+
+.right-column {
+  float: left;
+  width: 75%;
+  margin-top: 6px;
+}
+
+.row {
+  margin: 0;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+  .left-column, .right-column, input[type=submit] {
+    width: 95%;
+    margin-top: 0;
+  }
+  .signup-form {
+    margin-top: 40px;
+    width: 95%;
+    display: inline-block;
+  }
+}

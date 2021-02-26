@@ -1,0 +1,347 @@
+#mainContent {
+	background: transparent;
+}
+
+#regForm {
+	background-color: transparent;
+	margin: 5% auto;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	/*padding: 40px;*/
+	width: 75%;
+	min-width: 300px;
+}
+
+#background {
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    z-index: -1;
+}
+
+#background img {
+    position: absolute;
+    opacity: 0.5;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    min-width: 50%;
+    min-height: 50%;
+}
+
+
+.projectContent {
+    display: block;
+    padding: 16px;
+}
+
+.projectContent label {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--theme4);
+}
+
+#project_avatar {
+    display: block;
+}
+
+#avatar {
+	width: 100%;
+}
+
+input[type=text],
+input[type=file],
+textarea,
+select {
+	padding: 10px;
+	width: 100%;
+	font-size: 17px;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	border: 2px solid var(--grey2);
+}
+
+input[type=button],
+.deletePrompt {
+	padding: 10px;
+	background-color: var(--theme4);
+	width: 25%;
+	color: white;
+	font-size: 16px;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	border: 1px solid var(--grey3);
+    border-radius: 5px;
+	margin: 2% 40%;
+}
+
+input[type=button]:hover {
+	opacity: 0.7;
+}
+
+/* Mark input boxes that gets an error on validation: */
+
+input.invalid, textarea.invalid, label.invalid, p.invalid, select.invalid {
+	background-color: #ffdddd;
+}
+
+
+/* Hide all steps by default: */
+
+.tab {
+	display: none;
+}
+
+button {
+	background-color: var(--theme3);
+	color: #ffffff;
+	border: none;
+    border-radius: 5px;
+	padding: 10px 20px;
+	font-size: 17px;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	cursor: pointer;
+}
+
+button:hover {
+	filter: brightness(125%);
+}
+
+#prevBtn {
+	background-color: var(--grey2);
+	margin: 0;
+}
+
+#nextBtn {
+	/*backgrosund-color: var(--grey2);*/
+	margin: 0;
+}
+
+
+/* Make circles that indicate the steps of the form: */
+
+.step {
+	height: 15px;
+	width: 15px;
+	margin: 0 2px;
+	background-color: var(--grey2);
+	border: none;
+	border-radius: 50%;
+	display: inline-block;
+	opacity: 0.5;
+}
+
+.step.active {
+	opacity: 1;
+}
+
+
+/* Mark the steps that are finished and valid: */
+
+.step.finish {
+	background-color: var(--theme2);
+}
+
+.col-50 {
+	float: left;
+	width: 50%;
+}
+
+.left-column {
+	float: left;
+	width: 20%;
+	margin-top: 6px;
+}
+
+.right-column {
+	float: left;
+	width: 80%;
+	margin-top: 6px;
+}
+
+.row {
+	text-align: left;
+}
+.add-materials {
+	display: none;
+}
+
+/* Clear floats after the columns */
+
+.row:after {
+	content: "";
+	display: table;
+	clear: both;
+}
+
+
+/* Bordered form */
+
+#added-materials-div {
+	display: none;
+}
+
+#materialsTable {
+    border-collapse: collapse;
+    padding-top: 12px;
+    font-size: 16px;
+    font-family: sans-serif;
+    float: left;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+    border: thick solid #ccc;
+    border-radius: 8px;
+    background: white;
+}
+
+#materialsTable thead tr {
+	background-color: var(--grey2);
+	color: #ffffff;
+	text-align: center;
+}
+
+#materialsTable th,
+#materialsTable td {
+	padding: 12px 15px;
+}
+
+#materialsTable tbody tr {
+	border-bottom: 1px solid #dddddd;
+}
+
+#materialsTable tbody tr:nth-of-type(even) {
+	background-color: #f3f3f3;
+
+}
+
+#materialsTable tbody tr:last-of-type {
+	border-bottom: 2px solid #009879;
+}
+
+#materialsTable tbody tr.active-row {
+	font-weight: bold;
+	color: #009879;
+}
+
+#materialsTable p {
+	margin: 0;
+}
+
+#avatar_label {
+	width: 50%%;
+}
+
+
+/* Style the button that is used to open and close the collapsible content */
+
+.collapsible, .active-collapsible {
+	background-color: var(--theme4);
+	color: white;
+	cursor: pointer;
+	padding: 18px;
+	width: 100%;
+	border: none;
+	text-align: left;
+	outline: none;
+	font-size: 16px;
+	position: relative;
+}
+
+.collapsible p, .active-collapsible p{
+	margin: 0 5%;
+}
+
+/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+
+
+.collapsible:hover {
+	background-color: var(--grey2);
+}
+
+.active-collapsible:hover {
+	background-color: var(--theme4);
+}
+
+.collapsible:before, .active-collapsible:before {
+  color: white;
+  font-weight: bold;
+  float: left;
+  margin-left: 5px;
+  padding-right: 2%;
+}
+
+.collapsible:before {
+  content: '\002B';
+
+}
+.active-collapsible:before {
+  content: "\2212";
+}
+
+
+/* Style the collapsible content. Note: hidden by default */
+
+.promptContent {
+	padding: 0 18px;
+	display: none;
+	overflow: hidden;
+	background-color: #f1f1f1;
+}
+
+#addedPrompts {
+	padding-bottom: 20px;
+	text-align: left;
+	display: none;
+}
+
+#avatarImage {
+	width: 100%;
+	height: 50%;
+	/*margin: 1% 25%;*/
+	border: 1px solid;
+}
+
+#deleteImage {
+	padding: 10px;
+	width: 100%;
+	font-size: 17px;
+	font-family: Raleway;
+	border: 1px solid #aaaaaa;
+	margin: 0;
+}
+
+@media screen and (max-width: 600px) {
+	#regForm {
+		width: 100%;
+		padding: 0;
+	}
+	.left-column,
+	.right-column {
+		width: 100%;
+		margin-top: 0;
+		font-size: 16px;
+	}
+	.add-material-form {
+		margin-top: 40px;
+		width: 100%;
+		display: inline-block;
+		font-size: 16px;
+	}
+	.materialsTable {
+		margin-top: 40px;
+		width: 100%;
+		display: inline-block;
+		font-size: 16px;
+	}
+	#avatarImage {
+		width: 100%;
+		margin: 0;
+	}
+	#deleteImage {
+		width: 100%;
+		margin: 0;
+	}
+	.projects {
+		width: 100%;
+	}
+}
