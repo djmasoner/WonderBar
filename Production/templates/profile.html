@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/static/css/main.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/profile.css" />
+    <title>WonderBar - Profile</title>
+</head>
+
+<body>
+    <div id="mainContent">
+        <header class="masthead mb-auto">
+            <div class="inner">
+                <h3 class="masthead-brand">WonderBar</h3>
+                <nav class="nav nav-masthead justify-content-center">
+                    <a class="nav-link" href="/">Home</a>
+                    <a class="nav-link" href="/projects">Projects</a>
+            {% if session['user_type'] == 'teacher' %}
+                    <a class="nav-link" href="/teachers">Teachers</a>
+            {% endif %}
+                    <a class="nav-link active" href="/profile">Profile</a>
+                    <a class="nav-link" href="/about">About</a>
+            {% if session['logged_in'] %}
+                    <a class="nav-link" href="/logout">Logout</a>
+            {% else %}
+                    <a class="nav-link" href="/oauth">Login</a>
+            {% endif %}
+                </nav>
+                    </div>
+        </header>
+
+        <div id="mainContent-wrap">
+			<input hidden type="text" id="user_id" value="{{ session['user_id'] }}"></input>
+			<input hidden type="text" id="user_type" value="{{ session['user_type'] }}"></input>
+            <div class="profile-border-outer">
+                <h1 id="username-header">John Smith</h1>
+                <div class="profile-border-inner">
+                    <div class="left-column">
+                        <img class="profile-pic" src="/static/images/default-profile.png"/>
+                        <div id="profile-info">
+                            <p>Student</p>
+                            <p>Username: jsmith123</p>
+                            <a href="#">Change Password</a>
+                            <p>Email: wonder@bar.com</p>
+                            <a href="#">Change Email</a>
+                </div>
+            </div>
+
+                    <div class="right-column">
+                        <h1>Saved Projects:</h1>
+                        <div id="saved-projects">
+                            <a class="saved-proj" href="/tempProject">Christmas Bird Count</a>
+                            <a class="saved-proj" href="#">Appalachian View Guides</a>
+                    </div>
+                        <h1>Recent Observations:</h1>
+                        <div id="recent-obs">
+
+                            <div class="obs-container">
+                                <h2>Christmas Bird Count</h2>
+                                <p>I was able to find a Northern Mockingbird near the Northwest Corner of a park in my town!</p>
+                </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer id="footer">
+            <ul id="footerList">
+            <li><p>Programmed by Monique Glasgow, Diana Masoner, and Sydney Walter</p></li>
+                <li style="float:right"><a href="/empty">Site Map</a></li>
+        </ul>
+        </footer>
+    </div>
+</body>
+</html>

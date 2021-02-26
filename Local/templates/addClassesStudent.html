@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+	<HEAD>
+		<meta charset="utf-8">
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" type="text/css" href="../static/css/main.css" />
+		<link rel="stylesheet" type="text/css" href="../static/css/addClasses.css" />
+		<link rel="stylesheet" type="text/css" href="../static/css/addClassesStudent.css" />
+		<title>WonderBar - View/Add Classes</title>
+		<script src="../static/scripts/addClassesStudent.js"></script>
+
+	</head>
+	<body>
+		<div id="mainContent">
+			<header class="masthead mb-auto">
+				<div class="inner">
+					<h3 class="masthead-brand">WonderBar</h3>
+					<nav class="nav nav-masthead justify-content-center">
+						<a class="nav-link" href="/">Home</a>
+						<a class="nav-link" href="/projects">Projects</a>
+						<!-- {% if session['user_type'] == 'teacher' %} -->
+						<a class="nav-link" href="/teachers">Teachers</a>
+						<!-- {% endif %} -->
+						<a class="nav-link" href="/profile">Profile</a>
+						<a class="nav-link" href="/about">About</a>
+						<!-- {% if session['logged_in'] %} -->
+						<a class="nav-link" href="/logout">Logout</a>
+						<!-- {% else %} -->
+						<a class="nav-link" href="/oauth">Login</a>
+						<!-- {% endif %} -->
+					</nav>
+				</div>
+			</header>
+			<div id="mainContent-wrap">
+	            <div id="background">
+	                <img src="../static/images/forest-background-2.jpg" alt="">
+	            </div>
+				<div class="classes">
+		            <div class="classTitle">
+						<h1>Available Classes</h1>
+						<h2>Add Class</h2>
+					</div>
+		            <div class="classContent">
+						<div id="available-classes-div">
+							<input type="text" id="myInput" onkeyup="myFunction('myInput', 'available-classes-table')" placeholder="Search for class...">
+							<table id="available-classes-table">
+								<colgroup>
+									<col span="1" style="width: 2%;">
+									<col span="1" style="width: 18%;">
+									<col span="1" style="width: 50%;">
+									<col span="1" style="width: 30%;">
+								</colgroup>
+								<thead>
+									<tr>
+										<th><input type="checkbox" id="selectAll" name="selectAll" onclick="selectAllClasses('available-classes-table', 'selectAll')" /></th>
+										<th>Class Code</th>
+										<th>Class Name</th>
+										<th>Teacher</th>
+									</tr>
+								</thead>
+								<tbody id="tableBody">
+								</tbody>
+							</table>
+							<INPUT type="button" value="Add" onclick="addClass('available-classes-table')" /><br><br>
+						</div>
+					</div>
+				</div>
+				<div class="classes">
+	            	<div class="classTitle">
+						<input hidden type="text" id="user_id" value="223"></input>
+						<input hidden type="text" id="user_type" value="student"></input>
+						<h1>My Classes</h1>
+						<h2>Click class to expand and view suggested projects</h2>
+					</div>
+		            <div class="classContent">
+						<div id="added-classes-div">
+						</div>
+					</div>
+				</div>
+			</div>
+			<footer id="footer">
+				<ul id="footerList">
+					<li>
+						<p>Programmed by Monique Glasgow, Diana Masoner, and Sydney Walter</p>
+					</li>
+					<li style="float:right"><a href="/empty">Site Map</a></li>
+				</ul>
+			</footer>
+		</div>
+   </body>
+</html>

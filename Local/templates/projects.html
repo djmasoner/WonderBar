@@ -1,0 +1,126 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="../static/css/main.css" />
+    <link rel="stylesheet" type="text/css" href="../static/css/projects.css" />
+    <title>WonderBar - Projects</title>
+</head>
+
+<body>
+    <div id="mainContent">
+        <header class="masthead mb-auto">
+            <div class="inner">
+                <h3 class="masthead-brand">WonderBar</h3>
+                <nav class="nav nav-masthead justify-content-center">
+                    <a class="nav-link" href="/">Home</a>
+                    <a class="nav-link active" href="/projects">Projects</a>
+            <!-- {% if session['user_type'] == 'teacher' %} -->
+                    <a class="nav-link" href="/teachers">Teachers</a>
+            <!-- {% endif %} -->
+                    <a class="nav-link" href="/profile">Profile</a>
+                    <a class="nav-link" href="/about">About</a>
+            <!-- {% if session['logged_in'] %} -->
+                    <a class="nav-link" href="/logout">Logout</a>
+            <!-- {% else %} -->
+                    <a class="nav-link" href="/oauth">Login</a>
+            <!-- {% endif %} -->
+                </nav>
+            </div>
+        </header>
+
+        <div id="mainContent-wrap">
+			<input hidden type="text" id="user_id" value="223"></input>
+			<input hidden type="text" id="user_type" value="student"></input>
+            <div class="project-buttons">
+                <a href="#">Find A Project</a>
+                <a href="/addProject">Make A Project</a>
+            </div>
+            <div class="projects-header">
+                <h1>Recent Projects</h1>
+            </div>
+            <div id="recent-project-list">
+                <div class="project">
+                    <a href="/tempProject">
+                        <div class="projectTitle">
+                            <h1>Christmas Bird Count</h1>
+                            <h2>Professor W.</h2>
+                        </div>
+                        <div class="projectContent">
+                            <div class="projectImage">
+                                <img src="../static/images/bird1.jpg" alt="Placeholder">
+                            </div>
+                            <div class="projectText">
+                                <p>
+                                    The Christmas Bird Count is an annual census of birds organized by the Audubon Society 
+                                    and conducted by volunteer birders around the United States. Data from the count revealed 
+                                    climate change is causing a reduction in the population of birds. Since 2009, they've 
+                                    released a number of surveys and studies that investigate and illustrate how global 
+                                    warming is disrupting the environment.
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="project">
+                    <div class="projectTitle">
+                        <h1>Project Budburst</h1>
+                        <h2>Professor X.</h2>
+                    </div>
+                    <div class="projectContent">
+                        <div class="projectImage">
+                            <img src="../static/images/flower1.jpg" alt="Placeholder">
+                        </div>
+                        <div class="projectText">
+                            <p>
+                                At Budburst, we believe that the beauty of nature should be enjoyed by all of us. That’s why 
+                                we bring together researchers, educators, and community scientists to help answer important 
+                                questions around the effects of climate change on plants and animals—and how we can mitigate 
+                                those effects.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project">
+                    <div class="projectTitle">
+                        <h1>Appalachian View Guides</h1>
+                        <h2>Professor Y.</h2>
+                    </div>
+                    <div class="projectContent">
+                        <div class="projectImage">
+                            <img src="../static/images/mountain.jpg" alt="Placeholder">
+                        </div>
+                        <div class="projectText">
+                            <p>
+                                The relationships between pollution, respiratory health, and exercise aren't fully understood. 
+                                While air quality data helps scientists understand how pollutants affect breathing, a limited 
+                                pool of data means they don't have the full picture. Those dedicated to preserving the Earth 
+                                can volunteer to help.
+                            </p>
+                            <p>
+                                Appalachian Mountain Club's view guides are volunteer hikers who measure visibility from trails. 
+                                Combined with local health information, scientists use the visibility data collected to better 
+                                understand the relationship between haze, pollution, and the effectiveness of exercise. The Club 
+                                also publishes reports on the visibility of specific hikes, allowing people to plan their trips 
+                                in and through Appalachia.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <footer id="footer">
+            <ul id="footerList">
+                <li><p>Programmed by Monique Glasgow, Diana Masoner, and Sydney Walter</p></li>
+                <li style="float:right"><a href="/empty">Site Map</a></li>
+            </ul>
+        </footer>
+    </div>
+</body>
+</html>

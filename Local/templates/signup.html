@@ -1,0 +1,164 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" type="text/css" href="../static/css/main.css" />
+		<link rel="stylesheet" type="text/css" href="../static/css/signup.css" />
+		<title>WonderBar - Signup</title>
+		<script src="../static/scripts/signup.js"></script>
+	</head>
+	<body>
+		<div id="mainContent">
+			<header class="masthead mb-auto">
+				<div class="inner">
+					<h3 class="masthead-brand">WonderBar</h3>
+					<nav class="nav nav-masthead justify-content-center">
+						<a class="nav-link" href="/">Home</a>
+						<a class="nav-link" href="/projects">Projects</a>
+						<!-- {% if session['user_type'] == 'teacher' %} -->
+						<a class="nav-link" href="/teachers">Teachers</a>
+						<!-- {% endif %} -->
+						<a class="nav-link" href="/profile">Profile</a>
+						<a class="nav-link" href="/about">About</a>
+						<!-- {% if session['logged_in'] %} -->
+						<a class="nav-link" href="/logout">Logout</a>
+						<!-- {% else %} -->
+						<a class="nav-link" href="/oauth">Login</a>
+						<!-- {% endif %} -->
+					</nav>
+				</div>
+			</header>
+			<div id="mainContent-wrap">
+				<div class="signup">
+					<!-- <div class="tab"> -->
+			            <div class="signupTitle">
+							<h1>Register</h1>
+							<h2>Please fill in this form to create an account.</h2>
+							<hr>
+						</div>
+			            <div class="signupContent">
+							<form action="/signup" method="post" class="signup-form">
+								<div class="row">
+									<div class="left-column">
+										<label for="user_type">Role*</label>
+									</div>
+									<div class="right-column">
+										<div class="usertype-radio">
+											<input type="radio" id="teacherType" name="user_type" value="teacher" onclick="javascript:yesnoCheck();">
+											<label for="teacherType">Teacher</label>
+											<input type="radio" id="studentType" name="user_type" value="student" onclick="javascript:yesnoCheck();">
+											<label for="studentType">Student</label>
+										</div>
+									</div>
+								</div>
+								<div class="teachers_only" style="display:none">
+									<div class="row">
+										<div class="left-column">
+											<label for="teaching_certification_id">Teaching Certification ID*</label>
+										</div>
+										<div class="right-column">
+											<input required placeholder="Teaching Certification ID..." type="text" id="teaching_certification_id" name="teaching_certification_id" maxlength="50" onfocusout="confirmCert()">
+											<!-- <input id="confirmTeacher" type="button" value="Verify" onclick="confirm()"><br><br> -->
+										</div>
+									</div>
+								</div>
+								<div class="students_only" style="display:none">
+									<div class="row">
+										<div class="left-column">
+											<label for="activation_code">Activation Code*</label>
+										</div>
+										<div class="right-column">
+											<input required placeholder="Activation Code..." id= "activation_code" type="text" name="activation_code" minlength="15" maxlength="20" pattern="[A-Za-z]{15,20}" onfocusout="confirmActivationCode()">
+										</div>
+									</div>
+								</div>
+								<div class ="student_teacher_fields" style="display:none">
+									<div class="row">
+										<div class="left-column">
+											<label for="school">School*</label>
+										</div>
+										<div class="right-column">
+											<input required placeholder="Name of School...." type="text" id="school" name="school" maxlength="100"><br>
+										</div>
+									</div>
+								</div>
+								<div class="teachers_only" style="display:none">
+									<div class="row">
+										<div class="left-column">
+											<label for="title">Title*</label>
+										</div>
+										<div class="right-column">
+											<select required name="title" id="title">
+												<option value="" disabled selected>Select your option</option>
+												<option value="Dr.">Dr.</option>
+												<option value="Miss">Miss</option>
+												<option value="Mr.">Mr.</option>
+												<option value="Mrs.">Mrs.</option>
+												<option value="Ms.">Ms.</option>
+											</select>
+											<br>
+										</div>
+									</div>
+								</div>
+								<div class ="student_teacher_fields" style="display:none">
+									<div class="row">
+										<div class="left-column">
+											<label for="first_name">First Name*</label>
+										</div>
+										<div class="right-column">
+											<input required placeholder="First Name..." type="text" id="first_name" name="first_name" value="{{ first_name }}" maxlength="30"><br>
+										</div>
+									</div>
+									<div class="row">
+										<div class="left-column">
+											<label for="last_name">Last Name*</label>
+										</div>
+										<div class="right-column">
+											<input required placeholder="Last Name..." type="text" id="last_name" name="last_name" value="{{ last_name }}" maxlength="30"><br>
+										</div>
+									</div>
+									<div class="row">
+										<div class="left-column">
+											<label for="username">Username*</label>
+										</div>
+										<div class="right-column">
+											<input required placeholder="Username..." type="text" id="username" name="username" maxlength="50" pattern="[A-Za-z_0-9]{5,50}" onfocusout="confirmUsername()"><br>
+										</div>
+									</div>
+									<div class="row">
+										<div class="left-column">
+											<label for="birthdate">Birthdate*</label>
+										</div>
+										<div class="right-column">
+											<input required type="date" id="birthdate" name="birthdate"><br><br>
+										</div>
+									</div>
+									<div class="row">
+										<div class="right-column">
+											<input required type="text" id="email_address" name="email_address" value="{{ emailAddress }}" hidden><br>
+											<input type="hidden" id="sub" name="sub" value="{{ sub }}" readonly><br><br>
+										</div>
+										<div class="left-column">
+											<input type="submit" value="Submit">
+										</div>
+									</div>
+								</div>
+							</form>
+						</div>
+					<!-- </div> -->
+				</div>
+			</div>
+			<footer id="footer">
+				<ul id="footerList">
+					<li>
+						<p>Programmed by Monique Glasgow, Diana Masoner, and Sydney Walter</p>
+					</li>
+					<li style="float:right"><a href="/empty">Site Map</a></li>
+				</ul>
+			</footer>
+		</div>
+	</body>
+</html>
