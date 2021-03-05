@@ -1,6 +1,39 @@
 ﻿#mainContent {
-    background: white;
+    background: transparent;
 }
+
+#recent-project-list {
+    background-color: transparent;
+    margin: 5% auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    /*padding: 40px;*/
+    width: 95%;
+    min-width: 300px;
+}
+
+#background {
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    z-index: -1;
+}
+
+#background img {
+    position: absolute;
+    opacity: 0.5;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    min-width: 50%;
+    min-height: 50%;
+}
+
+
+
 
 /* CSS Project Display Definitions*/
 .project-buttons {
@@ -18,6 +51,24 @@
     border-radius: 12px;
     color: white;
     background: var(--theme3);
+}
+
+
+.prevnext-buttons .left-column, .prevnext-buttons .right-column {
+    width: 50%;
+    font-weight: bold;
+    color: white;
+
+}
+
+.left-column a, .right-column a {
+    margin: 10px;
+    padding: 15px 50px;
+    width: 50%;
+    border-radius: 12px;
+    color: white;
+    background: var(--theme3);
+    font-size: 1.5rem;
 }
 
 .project-buttons a:hover {
@@ -112,7 +163,7 @@ a:hover {
 .imgNumber {
     color: #bbbbbb;
     text-shadow: 1px 1px black;
-    font-size: 12px;
+    font-size: 16px;
     padding: 8px 12px;
     position: absolute;
 }
@@ -174,4 +225,33 @@ a:hover {
 
 .obsButtons a:hover {
     opacity: 0.8;
+}
+
+.left-column {
+    float: left;
+    width: 40%;
+    margin-top: 6px;
+}
+
+.right-column {
+    float: left;
+    width: 60%;
+    margin-top: 6px;
+}
+
+@media screen and (max-width: 600px) {
+    #recent-project-list {
+        width: 100%;
+        padding: 0;
+    }
+
+    .left-column,
+    .right-column {
+        width: 100%;
+        margin-top: 0;
+        font-size: 16px;
+    }
+    /*.project {
+        width: 100%;
+    }*/
 }

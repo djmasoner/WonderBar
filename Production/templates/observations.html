@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://www.gstatic.com/charts/loader.js"></script>
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
+		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyACWR7r7iEOXFdRlsGhpXvF-EiqvCR9vUo"></script>
+		<link rel="stylesheet" type="text/css" href="/static/css/main.css" />
+		<link rel="stylesheet" type="text/css" href="/static/css/projects.css" />
+		<link rel="stylesheet" type="text/css" href="/static/css/newObserv.css" />
+		<link rel="stylesheet" type="text/css" href="/static/css/createProject.css" />
+		<title>WonderBar - Make A Project</title>
+<!-- 		<style >
+			
+			.tab {
+				display: block;
+			}
+		</style> -->
+	<style>
+	#loader {
+		text-align: center;
+	  display: none;
+	  border: 16px solid #f3f3f3;
+	  border-radius: 50%;
+	  border-top: 16px solid #3498db;
+	  width: 120px;
+	  height: 120px;
+	  -webkit-animation: spin 2s linear infinite; /* Safari */
+	  animation: spin 2s linear infinite;
+	  margin: 10% 50%;
+	}
+
+div.gallery {
+  border: 1px solid #ccc;
+}
+
+div.gallery:hover {
+  border: 1px solid #777;
+}
+
+div.gallery img {
+  width: 100%;
+  height: auto;
+}
+
+div.desc {
+  padding: 15px;
+  text-align: center;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.responsive {
+  padding: 0 6px 6px 0;
+  /*float: left;*/
+  display: inline-block;
+  width: 24.99999%;
+}
+
+@media only screen and (max-width: 700px) {
+  .responsive {
+    width: 49.99999%;
+    margin: 6px 0;
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .responsive {
+    width: 100%;
+  }
+}
+
+.right-column button{
+	background: var(--theme4);
+}
+
+.step {
+	height: 50px;
+	width: 50px;
+	margin: 0 2px;
+	background-color: var(--theme5);
+	border: none;
+	border-radius: 50%;
+	display: inline-block;
+	opacity: 0.7;
+	font-size: 30px;
+	text-align: center;
+	font-weight: bold;
+	color: white;
+}
+
+.left-column {
+	width: 40%;
+}
+
+.right-column {
+	width: 60%;
+}
+
+
+.right-column h3, .left-column h3 {
+    text-align: left;
+    font-size: 1rem;
+    width: 100%;
+    border-bottom: 2px solid var(--theme4);
+}
+
+.obs-container {
+    display: block;
+    margin: 5px 0;
+    padding: 3px;
+    background: var(--theme4);
+    border-radius: 10px;
+}
+
+.obs-container h2 {
+    color: white;
+    font-size: 1.1rem;
+    margin: 3px;
+}
+
+.obs-container p {
+    background: white;
+    /*border-radius: 7px;*/
+    margin: 0;
+    padding: 5px;
+    font-size: 1rem;
+
+}
+
+
+@media screen and (max-width: 600px) {
+	#regForm {
+		width: 100%;
+		padding: 0;
+	}
+	.left-column,
+	.right-column {
+		width: 100%;
+		margin-top: 0;
+		font-size: 16px;
+	}
+	.add-material-form {
+		margin-top: 40px;
+		width: 100%;
+		display: inline-block;
+		font-size: 16px;
+	}
+	.materialsTable {
+		margin-top: 40px;
+		width: 100%;
+		display: inline-block;
+		font-size: 16px;
+	}
+	.media-file {
+		width: 100%;
+		margin: 0;
+	}
+	#delete_image {
+		width: 100%;
+		margin: 0;
+	}
+	.projects {
+		width: 100%;
+	}
+}
+
+.tab {
+	display: block;
+}
+.add-location {
+	display: none;
+}
+
+	/* Safari */
+	@-webkit-keyframes spin {
+	  0% { -webkit-transform: rotate(0deg); }
+	  100% { -webkit-transform: rotate(360deg); }
+	}
+
+	@keyframes spin {
+	  0% { transform: rotate(0deg); }
+	  100% { transform: rotate(360deg); }
+	}
+	</style>
+	</head>
+	<body>
+    <div id="mainContent">
+        <header class="masthead mb-auto">
+            <div class="inner">
+                <h3 class="masthead-brand">WonderBar</h3>
+                <nav class="nav nav-masthead justify-content-center">
+                    <a class="nav-link" href="/">Home</a>
+                    <a class="nav-link" href="/projects">Projects</a>
+            {% if session['user_type'] == 'teacher' %}
+                    <a class="nav-link" href="/teachers">Teachers</a>
+            {% endif %}
+                    <a class="nav-link" href="/profile">Profile</a>
+                    <a class="nav-link" href="/about">About</a>
+            {% if session['logged_in'] %}
+                    <a class="nav-link" href="/logout">Logout</a>
+            {% else %}
+                    <a class="nav-link" href="/oauth">Login</a>
+            {% endif %}
+                </nav>
+            </div>
+        </header>
+		<div id="loader"></div>
+        <div id="mainContent-wrap">
+			<input hidden type="text" id="user_id" value="{{ session['user_id'] }}"></input>
+			<input hidden type="text" id="user_type" value="{{ session['user_type'] }}"></input>
+			<div id="background">
+				<img src="/static/images/mountian-background-1.jpg" alt="">
+			</div>
+			<!-- <form id="regForm" action="/projects" method="post"> -->
+				<!-- One "tab" for each step in the form: -->
+				<div id="steps" style="text-align:center;margin-top:40px;">
+					<p id="jump">Jump to prompt: </p>
+				</div>
+
+			<!-- </form> -->
+		</div>
+        <footer id="footer">
+            <ul id="footerList">
+                <li><p>Programmed by Monique Glasgow, Diana Masoner, and Sydney Walter</p></li>
+                <li style="float:right"><a href="/empty">Site Map</a></li>
+            </ul>
+        </footer>
+    </div>
+	</body>
+	<script src="/static/scripts/fetch_functions.js"></script>
+	<script src="/static/scripts/api_calls.js"></script>
+	<script src="/static/scripts/observations.js"></script>

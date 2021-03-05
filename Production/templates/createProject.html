@@ -4,10 +4,12 @@
 		<meta charset="utf-8">
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<script src="/static/scripts/createProject.js"></script>
 		<link rel="stylesheet" type="text/css" href="/static/css/main.css" />
 		<link rel="stylesheet" type="text/css" href="/static/css/projects.css" />
 		<link rel="stylesheet" type="text/css" href="/static/css/createProject.css" />
+		<script src="/static/scripts/fetch_functions.js"></script>
+		<script src="/static/scripts/api_calls.js"></script>
+		<script src="/static/scripts/createProject.js"></script>
 		<title>WonderBar - Make A Project</title>
 	</head>
 	<body>
@@ -35,7 +37,7 @@
 			<div id="background">
 				<img src="/static/images/mountian-background-1.jpg" alt="">
 			</div>
-			<form id="regForm" action="/projects" method="post">
+			<form id="regForm" action="/viewProject" method="get">
 				<input hidden type="text" id="user_id" value="{{ session['user_id'] }}"></input>
 				<input hidden type="text" id="user_type" value="{{ session['user_type'] }}"></input>
 				<!-- One "tab" for each step in the form: -->
@@ -59,7 +61,8 @@
 								<label for="project_name">Project Name *</label>
 							</div>
 							<div class="right-column">
-								<p><input required type="text" placeholder="Enter project name here..." name="project_name" id="project_name" onfocusout="confirmUnique('project_name', 'Project name', 'projects', 'name')" minlength="5" maxlength="100"></p>
+									<p><input required type="text" placeholder="Enter project name here..." name="project_name" id="project_name" onfocusout="verifyTextData(this)" minlength="3" maxlength="100" ></p>
+									<span></span>
 							</div>
 						</div>
 						<div class="row">
@@ -67,7 +70,8 @@
 								<label for="project_short_desc">Project Description *</label>
 							</div>
 							<div class="right-column">
-								<p><textarea required rows="2"  name="project_short_desc" form="regForm" placeholder="Enter description here..." id="project_short_desc" minlength="15" maxlength="255"></textarea></p>
+									<p><textarea required rows="2"  name="project_short_desc" form="regForm" placeholder="Enter description here..." id="project_short_desc" onfocusout="verifyTextData(this)" minlength="15" maxlength="255"></textarea></p>
+									<span></span>
 							</div>
 						</div>
 						<div class="row">
@@ -75,23 +79,184 @@
 								<label for="project_long_desc">Project Notes</label>
 							</div>
 							<div class="right-column">
-								<p><textarea rows="4" name="project_long_desc" form="regForm" placeholder="Enter long description here..." id="project_long_desc" maxlength="65000"></textarea></p>
+									<p><textarea rows="4" name="project_long_desc" form="regForm" placeholder="Enter long description here..." id="project_long_desc" onfocusout="verifyTextData(this)" maxlength="65000"></textarea></p>
+									<span></span>
 							</div>
 						</div>
 						<div class="row">
 							<div class="left-column">
-								<!-- <p>Project Avatar</p> -->
 								<label for="deleteImage">Project Avatar</label>
 							</div>
-							<div class="right-column" id="project_avatar">
-								<input type="file" id="avatar" name="avatar" accept="image/*" onchange="updateImage(event)">
+								<div class="right-column" class="media-files" id="project_avatar">
+									<input type="file" id="avatar" name="avatar" accept="image/*" onchange="fileValidation(event, 'avatar', 'avatarImage', 'avatar_label', 'delete_image')">
+									<span></span>
 								<div class="right-column">
-									<label for="avatar" id="avatar_label" style="display:none"><img src="" alt="" id="avatarImage"></label>
-								</div>
-								<div class="left-column">
-									<input type="button" id="deleteImage" value="Remove" onclick="deleteFile()" style="display:none">
+										<label for="avatar" id="avatar_label" style="display:none"><img class="media-file" src="" alt="" id="avatarImage"></label>
+									</div>
+									<div class="left-column">
+										<input type="button" id="delete_image" value="Remove" onclick="deleteFile('avatar', 'avatarImage', 'avatar_label', 'delete_image')" style="display:none">
+									</div>
 								</div>
 							</div>
+						</div>
+					</div>
+					<div class="tab" id="proj_materials">
+			            <div class="projectTitle">
+	                        <div class="row">
+								<div class="left-column">
+	                                <h1>Create Project</h1>
+	                                <h2>Materials</h2>
+	                            </div>
+	                            <div class="right-column">
+	                                <p>Add the materials needed to make observations for this project.</p>
+	                            </div>
+	                        </div>
+						</div>
+		            	<div class="projectContent">
+							<div class="add-material-form">
+	 						<p>All fields marked with * are required</p>
+								<div class="row">
+									<p><label id="usertype-radio-label" for="needs_material">Are any materials needed for this project? *</label></p>
+									<div class="usertype-radio">
+										<input type="radio" id="materials_yes" name="needs_material" value="true" onclick="javascript:yesnoCheck();">
+										<label for="materials_yes">Yes</label>
+										<input type="radio" id="materials_no" name="needs_material" value="false" onclick="javascript:yesnoCheck();">
+										<label for="materials_no">No</label>
+									</div>
+								</div>
+								<hr>
+								<p class="add-materials" id="add-materials-label">Add materials using the form below.</p>
+								<div class="row add-materials">
+									<div class="left-column">
+										<label for="material_name">Name *</label>
+									</div>
+									<div class="right-column">
+										<p><input placeholder="Enter material name..."  type="text" onfocusout="verifyTextData(this)" name="material_name" id="material_name"></p>
+										<span></span>
+									</div>
+								</div>
+								<div class="row add-materials">
+									<div class="left-column">
+										<label for="material_quantity">Quantity *</label>
+									</div>
+									<div class="right-column">
+										<p><input placeholder="Enter material quantity (e.g. 1 tsp, 10, 4 ft)..." type="text" onfocusout="verifyTextData(this)" name="material_quantity" id="material_quantity"></p>
+										<span></span>
+									</div>
+								</div>
+								<div class="row add-materials">
+									<input type="button" value="Add" onclick="addMaterial('materialsTable')"/>
+								</div>
+							</div>
+							<div id="added-materials-div">
+								<hr>
+								<TABLE id="materialsTable" style="width: 100%">
+									<colgroup>
+										<col span="1" style="width: 5%;">
+										<col span="1" style="width: 42.5%;">
+										<col span="1" style="width: 42.5%;">
+									</colgroup>
+									<thead>
+										<tr>
+											<th></th>
+											<th>Material</th>
+											<th>Quantity</th>
+										</tr>
+									</thead>
+									<tbody id="materials-tbody">
+									</tbody>
+								</TABLE>
+							</div>
+						</div>
+					</div>
+					<div class="tab" id="proj_prompts">
+			            <div class="projectTitle">
+	                        <div class="row">
+	                            <div class="left-column">
+	                                <h1>Create Project</h1>
+	                                <h2>Prompts</h2>
+	                            </div>
+	                            <div class="right-column">
+	                                <p>Add the prompts for this project. The prompts will tell the student exactly what they need to do and what type of response is required to make their observation. You can also add a video, photo, or voice recording to make it easier!</p>
+	                            </div>
+	                        </div>
+						</div>
+		            	<div class="projectContent">
+	 						<p>All fields marked with * are required</p>
+							<div class="add-prompt-form">
+								<div class="row">
+									<div class="left-column">
+										<label for="prompt_subheading">Name *</label>
+									</div>
+									<div class="right-column">
+										<p><input required placeholder="Enter prompt name (short description to quickly identify prompt)..."  type="text" onfocusout="verifyTextData(this)" name="prompt_subheading" id="prompt_subheading"></p>
+										<span></span>
+									</div>
+								</div>
+								<div class="row">
+									<div class="left-column">
+										<label for="prompt_description">Description *</label>
+									</div>
+									<div class="right-column">
+										<p><textarea required rows="4" type="text" id="prompt_description" onfocusout="verifyTextData(this)" name="prompt_description" form="regForm" placeholder="Enter prompt description (detailed description explaining what student needs to do)..."></textarea></p>
+										<span></span>
+									</div>
+								</div>
+								<div class="row">
+									<div class="left-column">
+										<label for="prompt_response_type">Type *</label>
+									</div>
+									<div class="right-column" id="prompt_options">
+										<select required name="prompt_response_type" id="prompt_response_type" onchange="getOptions()">
+											<option id="default_type" value="" disabled selected>Select response type</option>
+										</select>
+									</div>
+								</div>
+								<div class="row" id="response_options" style="display: none">
+									<div class="left-column">
+										<label for="add-options">Options *</label>
+									</div>
+									<div class="right-column" id="add-options">
+										<p><input type="text" placeholder="Enter options (pipe-delimited e.g. Sunny|Rainy|Cloudy)" onfocusout="verifyTextData(this)" id="prompt_responses"></p>
+										<span></span>
+									</div>
+								</div>
+								<div class="row">
+									<div class="left-column">
+										<label for="prompt_media_type">Media Type </label>
+									</div>
+									<div class="right-column">
+										<select name="prompt_media_type" id="prompt_media_type" onchange="setAccept(this, 'prompt_reference', 'delete_prompt_image')">
+											<option id="default_media_type" value="" disabled selected>Select media type</option>
+	    									<option id="audio_type" value="audio">Audio</option>
+	                                        <option id="image_type" value="image">Image</option>
+	                                        <option id="video_type" value="video">Video</option>
+										</select>
+									</div>
+								</div>
+								<div class="row">
+									<div class="left-column">
+										<label style="display:none" id="prompt_reference_label" for="prompt_reference">Media File </label>
+									</div>
+									<div class="right-column">
+										<input type="file" id="prompt_reference" name="prompt_reference" accept="image/*, video/*, audio/*" onchange="fileValidation(event, 'prompt_reference', 'prompt_avatar_image', 'prompt_reference_label_image', 'delete_prompt_image')" style="display:none">
+										<span></span>
+										<div class="right-column" class="media_files">
+											<label for="prompt_reference" id="prompt_reference_label_image" style="display:none"><picture><img src="" alt="" class="media-file" id="prompt_avatar_image"></picture></label>
+											<label for="prompt_reference" id="prompt_reference_label_audio" style="display:none"><audio controls class="media-file"><source src="" alt="" id="prompt_avatar_audio"></audio></label>
+											<label for="prompt_reference" id="prompt_reference_label_video" style="display:none"><video controls class="media-file"><source src="" alt="" id="prompt_avatar_video"></video></label>
+										</div>
+										<div class="left-column">
+											<input type="button" id="delete_prompt_image" value="Remove" onclick="deleteFile('prompt_reference', 'prompt_avatar_image', 'prompt_reference_label', 'delete_prompt_image')" style="display:none">
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<input type="button" value="Add" onclick="addPrompt()"/>
+								</div>
+							</div>
+							<div id="addedPrompts">
+								<hr>
 						</div>
 					</div>
 				</div>
@@ -136,131 +301,7 @@
 				</div>
 				<div class="tab">
 		            <div class="projectTitle">
-                        <div class="row">
-                            <div class="left-column">
-                                <h1>Create Project</h1>
-                                <h2>Materials</h2>
-                            </div>
-                            <div class="right-column">
-                                <p>Add the materials needed to make observations for this project.</p>
-                            </div>
-                        </div>
-					</div>
-	            	<div class="projectContent">
-						<div class="add-material-form">
- 						<p>All fields marked with * are required</p>
-							<div class="row">
-								<p><label for="needs_material">Are any materials needed for this project? *</label></p>
-								<div class="usertype-radio">
-									<input type="radio" id="materials_yes" name="needs_material" value="true" onclick="javascript:yesnoCheck();">
-									<label for="materials_yes">Yes</label>
-									<input type="radio" id="materials_no" name="needs_material" value="false" onclick="javascript:yesnoCheck();">
-									<label for="materials_no">No</label>
-								</div>
-							</div>
-							<hr>
-							<p class="add-materials">Add materials using the form below.</p>
-							<div class="row add-materials">
-								<div class="left-column">
-									<label for="material_name">Name *</label>
-								</div>
-								<div class="right-column">
-									<input placeholder="Enter material name..."  type="text" name="material_name" id="material_name">
-								</div>
-							</div>
-							<div class="row add-materials">
-								<div class="left-column">
-									<label for="material_quantity">Quantity *</label>
-								</div>
-								<div class="right-column">
-									<input placeholder="Enter material quantity (e.g. 1 tsp, 10, 4 ft)..." type="text" name="material_quantity" id="material_quantity">
-								</div>
-							</div>
-							<div class="row add-materials">
-								<input type="button" value="Add" onclick="addMaterial('materialsTable')"/>
-							</div>
-						</div>
-						<div id="added-materials-div">
-							<hr>
-							<TABLE id="materialsTable" style="width: 100%">
-								<colgroup>
-									<col span="1" style="width: 5%;">
-									<col span="1" style="width: 42.5%;">
-									<col span="1" style="width: 42.5%;">
-								</colgroup>
-								<thead>
-									<tr>
-										<th></th>
-										<th>Material</th>
-										<th>Quantity</th>
-									</tr>
-								</thead>
-								<tbody id="materials-tbody">
-								</tbody>
-							</TABLE>
-						</div>
-					</div>
-				</div>
-				<div class="tab">
-		            <div class="projectTitle">
-                        <div class="row">
-                            <div class="left-column">
-                                <h1>Create Project</h1>
-                                <h2>Prompts</h2>
-                            </div>
-                            <div class="right-column">
-                                <p>Add the prompts for this project. The prompts will tell the student exactly what they need to do and what type of response is required to make their observation. </p>
-                            </div>
-                        </div>
-					</div>
-	            	<div class="projectContent">
-						<div class="add-prompt-form">
-							<div class="row">
-								<div class="left-column">
-									<label for="prompt_subheading">Category</label>
-								</div>
-								<div class="right-column">
-									<input placeholder="Enter prompt category (used to group similar prompts)..."  type="text" name="prompt_subheading" id="prompt_subheading">
-								</div>
-							</div>
-							<div class="row">
-								<div class="left-column">
-									<label for="prompt_description">Description *</label>
-								</div>
-								<div class="right-column">
-									<textarea rows="4" type="text" id="prompt_description" name="prompt_description" form="regForm" placeholder="Enter prompt description..."></textarea>
 									<!-- <textarea> placeholder="Enter prompt description..." type="text" name="prompt_description" id="prompt_description"></textarea> -->
-								</div>
-							</div>
-							<div class="row">
-								<div class="left-column">
-									<label for="prompt_response_type">Type *</label>
-								</div>
-								<div class="right-column" id="prompt_options">
-									<select required name="prompt_response_type" id="prompt_response_type" onchange="getOptions()">
-										<option id="default_type" value="" disabled selected>Select response type</option>
-									</select>
-								</div>
-							</div>
-							<div class="row" id="response_options" style="display: none">
-								<div class="left-column">
-									<label for="add-options">Options *</label>
-								</div>
-								<div class="right-column" id="add-options">
-									<input type="text" placeholder="Enter options (pipe-delimited e.g. Sunny|Rainy|Cloudy)" id="prompt_responses">
-								</div>
-							</div>
-							<div class="row">
-								<input type="button" value="Add" onclick="addPrompt('promptTable')"/>
-							</div>
-						</div>
-						<div id="addedPrompts">
-							<hr>
-						</div>
-					</div>
-				</div>
-				<div class="tab">
-		            <div class="projectTitle">
 						<h1>Create Project</h1>
 						<h2>Project Submitted Successfully! </h2>
 					</div>
@@ -269,7 +310,6 @@
 						<a href="/profile"><input type="button" value="My Profile"/></a>
 						<a href="/projects"><input type="button" value="Projects"/></a>
 					</div>
-				</div>
 
 			</div>
 				<div style="overflow:auto;">
@@ -288,6 +328,8 @@
 					<span class="step"></span>
 					<span class="step"></span>
 				</div>
+				</div>
+
 			</form>
 		</div>
         <footer id="footer">

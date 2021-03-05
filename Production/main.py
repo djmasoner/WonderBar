@@ -475,27 +475,105 @@ def about():
 
 @app.route("/<page_name>", methods=["GET"])
 def other_pages(page_name):
-    return render_template(page_name + '.html')
+    try: 
+        return render_template(page_name + '.html')
+    except:
+        res = make_response(json.dumps({"Error":"Page does not exist"}))
+        res.mimetype = 'application/json'
+        res.headers.set('Access-Control-Allow-Origin', '*')
+        res.headers.set('Content-Type', 'application/json')
+        res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
+        res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
+        res.status_code = 404
+        return res
 
 @app.route("/<page_name>/<page_id>", methods=["GET"])
 def other_pages_specific(page_name, page_id):
-    return render_template(page_name + '.html')
+    try: 
+        return render_template(page_name + '.html')
+    except:
+        res = make_response(json.dumps({"Error":"Page does not exist"}))
+        res.mimetype = 'application/json'
+        res.headers.set('Access-Control-Allow-Origin', '*')
+        res.headers.set('Content-Type', 'application/json')
+        res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
+        res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
+        res.status_code = 404
+        return res
 
+@app.route("/viewObservations", methods=["GET"])
+def view_observations():
+    try: 
+        return render_template('observations.html')
+    except:
+        res = make_response(json.dumps({"Error":"Page does not exist"}))
+        res.mimetype = 'application/json'
+        res.headers.set('Access-Control-Allow-Origin', '*')
+        res.headers.set('Content-Type', 'application/json')
+        res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
+        res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
+        res.status_code = 404
+        return res
+
+@app.route("/addObservations", methods=["GET"])
+def add_observations():
+    try: 
+        return render_template('prompts.html')
+    except:
+        res = make_response(json.dumps({"Error":"Page does not exist"}))
+        res.mimetype = 'application/json'
+        res.headers.set('Access-Control-Allow-Origin', '*')
+        res.headers.set('Content-Type', 'application/json')
+        res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
+        res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
+        res.status_code = 404
+        return res
+
+@app.route("/viewProject", methods=["GET"])
+def view_project():
+    try: 
+        return render_template('single_project.html')
+    except:
+        res = make_response(json.dumps({"Error":"Page does not exist"}))
+        res.mimetype = 'application/json'
+        res.headers.set('Access-Control-Allow-Origin', '*')
+        res.headers.set('Content-Type', 'application/json')
+        res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
+        res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
+        res.status_code = 404
+        return res
 
 # API routes start ------------------------------------------------------------------------------------------------------------------
 
 @app.route('/db<table_id>', methods = ['GET', 'OPTIONS'])
 def get_items(table_id):
 #    if "Authorization" not in request.headers:
-#        return Response(
-#            status=404,
-#            response=json.dumps({"Error":"Page does not exist"}),
-#        )
+#        res = make_response(json.dumps({"Error":"Page does not exist"}))
+#        res.mimetype = 'application/json'
+#        res.headers.set('Access-Control-Allow-Origin', '*')
+#        res.headers.set('Content-Type', 'application/json')
+#        res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
+#        res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
+#        res.status_code = 404
+#        return res
+    if request.method == 'OPTIONS':
+        res = make_response(json.dumps({"Success":"Success"}))
+        res.mimetype = 'application/json'
+        res.headers.set('Access-Control-Allow-Origin', '*')
+        res.headers.set('Content-Type', 'application/json')
+        res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
+        res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
+        res.status_code = 204
+        return res
     if table_id not in constants.table_attributes.keys():
-        return Response(
-            status=404,
-            response=json.dumps({"Error":"Page does not exist"}),
-        )
+        res = make_response(json.dumps({"Error":"Page does not exist"}))
+        res.mimetype = 'application/json'
+        res.headers.set('Access-Control-Allow-Origin', '*')
+        res.headers.set('Content-Type', 'application/json')
+        res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
+        res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
+        res.status_code = 404
+        return res
 
     return list_all_general(table_id, constants.table_pks[table_id])
 
@@ -504,25 +582,46 @@ def get_items(table_id):
 def get_item(table_id, project_id):
 
 #    if "Authorization" not in request.headers:
-#        return Response(
-#            status=404,
-#            response=json.dumps({"Error":"Page does not exist"}),
-#        )
+#        res = make_response(json.dumps({"Error":"Page does not exist"}))
+#        res.mimetype = 'application/json'
+#        res.headers.set('Access-Control-Allow-Origin', '*')
+#        res.headers.set('Content-Type', 'application/json')
+#        res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
+#        res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
+#        res.status_code = 404
+#        return res
+    if request.method == 'OPTIONS':
+        res = make_response(json.dumps({"Success":"Success"}))
+        res.mimetype = 'application/json'
+        res.headers.set('Access-Control-Allow-Origin', '*')
+        res.headers.set('Content-Type', 'application/json')
+        res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
+        res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
+        res.status_code = 204
+        return res
     if table_id not in constants.table_attributes.keys():
-        return Response(
-            status=404,
-            response=json.dumps({"Error":"Page does not exist"}),
-        )
+        res = make_response(json.dumps({"Error":"Page does not exist"}))
+        res.mimetype = 'application/json'
+        res.headers.set('Access-Control-Allow-Origin', '*')
+        res.headers.set('Content-Type', 'application/json')
+        res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
+        res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
+        res.status_code = 404
+        return res
     return list_one(table_id, constants.table_pks[table_id], project_id)
 
 @app.route('/db<table_id>', methods = ['POST'])
 def post_item(table_id):
 
     if table_id not in constants.table_attributes.keys():
-        return Response(
-            status=404,
-            response=json.dumps({"Error":"Page does not exist"}),
-        )
+        res = make_response(json.dumps({"Error":"Page does not exist"}))
+        res.mimetype = 'application/json'
+        res.headers.set('Access-Control-Allow-Origin', '*')
+        res.headers.set('Content-Type', 'application/json')
+        res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
+        res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
+        res.status_code = 404
+        return res
     return insert_item(table_id, constants.table_pks[table_id], constants.table_auto[table_id])
 
 
@@ -549,29 +648,45 @@ def post_item(table_id):
 @app.route('/db<table_id>/<project_id>', methods = ['PATCH'])
 def patch_item(table_id, project_id):
 #    if "Authorization" not in request.headers:
-#        return Response(
-#            status=404,
-#            response=json.dumps({"Error":"Page does not exist"}),
-#        )
+#        res = make_response(json.dumps({"Error":"Page does not exist"}))
+#        res.mimetype = 'application/json'
+#        res.headers.set('Access-Control-Allow-Origin', '*')
+#        res.headers.set('Content-Type', 'application/json')
+#        res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
+#        res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
+#        res.status_code = 404
+#        return res
     if table_id not in constants.table_attributes.keys():
-        return Response(
-            status=404,
-            response=json.dumps({"Error":"Page does not exist"}),
-        )
+        res = make_response(json.dumps({"Error":"Page does not exist"}))
+        res.mimetype = 'application/json'
+        res.headers.set('Access-Control-Allow-Origin', '*')
+        res.headers.set('Content-Type', 'application/json')
+        res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
+        res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
+        res.status_code = 404
+        return res
     return update_item(table_id, constants.table_pks[table_id], project_id)
 
 @app.route('/db<table_id>', methods = ['DELETE'])
 def delete_item(table_id):
 #    if "Authorization" not in request.headers:
-#        return Response(
-#            status=404,
-#            response=json.dumps({"Error":"Page does not exist"}),
-#        )
+#        res = make_response(json.dumps({"Error":"Page does not exist"}))
+#        res.mimetype = 'application/json'
+#        res.headers.set('Access-Control-Allow-Origin', '*')
+#        res.headers.set('Content-Type', 'application/json')
+#        res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
+#        res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
+#        res.status_code = 404
+#        return res
     if table_id not in constants.table_attributes.keys():
-        return Response(
-            status=404,
-            response=json.dumps({"Error":"Page does not exist"}),
-        )
+        res = make_response(json.dumps({"Error":"Page does not exist"}))
+        res.mimetype = 'application/json'
+        res.headers.set('Access-Control-Allow-Origin', '*')
+        res.headers.set('Content-Type', 'application/json')
+        res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
+        res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
+        res.status_code = 404
+        return res
     return delete_all(table_id)
 
 
@@ -641,12 +756,12 @@ def get_school_classes(project_id):
         if len(results) < q_limit or q_limit==0:
             next_set = None
         else:
-            next_set = (constants.app_url  + 'users' + "/" + project_id + "/" + 'dbschoolclasses' + "?" + "order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset + q_limit))
+            next_set = (constants.app_url  + 'dbusers' + "/" + project_id + "/" + 'dbschoolclasses' + "?" + "order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset + q_limit))
 
         if q_offset == 0:
             prev_set = None
         else:
-            prev_set = (constants.app_url  + 'users' + "/" + project_id + "/" + 'dbschoolclasses' + "?" + "order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset - q_limit))
+            prev_set = (constants.app_url  + 'dbusers' + "/" + project_id + "/" + 'dbschoolclasses' + "?" + "order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset - q_limit))
 
         all_projects=dict({"count":id_count, 
                             "prev": prev_set, 
@@ -669,6 +784,7 @@ def get_school_classes(project_id):
     res.mimetype = 'application/json'
     res.headers.set('Access-Control-Allow-Origin', '*')
     res.headers.set('Content-Type', 'application/json')
+    res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
     res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
     res.status_code = 200
     return res
@@ -677,24 +793,130 @@ def get_school_classes(project_id):
 @app.route('/db<table_id>/<project_id>', methods = ['DELETE'])
 def delete_items(table_id, project_id):
 #    if "Authorization" not in request.headers:
-#        return Response(
-#            status=404,
-#            response=json.dumps({"Error":"Page does not exist"}),
-#        )
+#        res = make_response(json.dumps({"Error":"Page does not exist"}))
+#        res.mimetype = 'application/json'
+#        res.headers.set('Access-Control-Allow-Origin', '*')
+#        res.headers.set('Content-Type', 'application/json')
+#        res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
+#        res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
+#        res.status_code = 404
+#        return res
     if table_id not in constants.table_attributes.keys():
-        return Response(
-            status=404,
-            response=json.dumps({"Error":"Page does not exist"}),
-        )
+        res = make_response(json.dumps({"Error":"Page does not exist"}))
+        res.mimetype = 'application/json'
+        res.headers.set('Access-Control-Allow-Origin', '*')
+        res.headers.set('Content-Type', 'application/json')
+        res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
+        res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
+        res.status_code = 404
+        return res
     return delete_one(table_id, constants.table_pks[table_id], project_id)
+
+
+@app.route('/dbprojects/<project_id1>/dbusers/<project_id2>', methods = ['GET','OPTIONS'])
+def get_project_users(project_id1, project_id2):
+    if request.method == 'OPTIONS':
+        res = make_response(json.dumps({"Success":"Success"}))
+        res.mimetype = 'application/json'
+        res.headers.set('Access-Control-Allow-Origin', '*')
+        res.headers.set('Content-Type', 'application/json')
+        res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
+        res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
+        res.status_code = 204
+        return res
+
+    # stmt = create_select(constants.table_fks[table1_id+"_"+table2_id][0]) + " WHERE " + constants.table_fks[table1_id+"_"+table2_id][2] + "=%s AND " + constants.table_fks[table1_id+"_"+table2_id][1] + "=%s"
+    # query database
+    try:
+        with db.connect() as conn:
+            projects = conn.execute(
+               "Select * from project_users where project_id = %s and user_id = %s", project_id1, project_id2
+            ).fetchall()
+
+        if len(projects) == 0:
+            res = make_response(json.dumps({"Error": "Project Users does not exist."}))
+            res.mimetype = 'application/json'
+            res.headers.set('Access-Control-Allow-Origin', '*')
+            res.headers.set('Content-Type', 'application/json')
+            res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
+            res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
+            res.status_code = 404
+            return res
+        else:
+            return list_one("users", constants.table_pks["users"], project_id2)
+
+    except Exception as e:
+        logger.exception(e)
+        return Response(
+            status=500,
+            response="Unable to successfully cast vote! Please check the "
+            "application logs for more details. '{}'".format(e),
+        )
+
+
+
+
+@app.route('/db<table1_id>/<project_id1>/db<table2_id>/<project_id2>', methods = ['GET','OPTIONS'])
+def get_existing(table1_id, project_id1, table2_id, project_id2):
+#    if "Authorization" not in request.headers:
+#        res = make_response(json.dumps({"Error":"Page does not exist"}))
+#        res.mimetype = 'application/json'
+#        res.headers.set('Access-Control-Allow-Origin', '*')
+#        res.headers.set('Content-Type', 'application/json')
+#        res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
+#        res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
+#        res.status_code = 404
+#        return res
+    if request.method == 'OPTIONS':
+        res = make_response(json.dumps({"Success":"Success"}))
+        res.mimetype = 'application/json'
+        res.headers.set('Access-Control-Allow-Origin', '*')
+        res.headers.set('Content-Type', 'application/json')
+        res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
+        res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
+        res.status_code = 204
+        return res
+
+    try:
+        with db.connect() as conn:
+            projects = conn.execute(
+               "Select * from " + constants.table_fks[table1_id+"_"+table2_id][0] + " where " + constants.table_fks[table1_id+"_"+table2_id][2] + " = %s and " + constants.table_fks[table1_id+"_"+table2_id][1] + " = %s", project_id1, project_id2
+            ).fetchall()
+
+        if len(projects) == 0:
+            res = make_response(json.dumps({"Error": "Resource does not exist."}))
+            res.mimetype = 'application/json'
+            res.headers.set('Access-Control-Allow-Origin', '*')
+            res.headers.set('Content-Type', 'application/json')
+            res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
+            res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
+            res.status_code = 404
+            return res
+        else:
+            return list_one(table2_id, constants.table_pks[table2_id], project_id2)
+
+    except Exception as e:
+        logger.exception(e)
+        return Response(
+            status=500,
+            response="Unable to successfully cast vote! Please check the "
+            "application logs for more details. '{}'".format(e),
+        )
+
+
+
 
 @app.route('/db<table1_id>/<project_id1>/db<table2_id>/<project_id2>', methods = ['PUT'])
 def add_to_existing(table1_id, project_id1, table2_id, project_id2):
 #    if "Authorization" not in request.headers:
-#        return Response(
-#            status=404,
-#            response=json.dumps({"Error":"Page does not exist"}),
-#        )
+#        res = make_response(json.dumps({"Error":"Page does not exist"}))
+#        res.mimetype = 'application/json'
+#        res.headers.set('Access-Control-Allow-Origin', '*')
+#        res.headers.set('Content-Type', 'application/json')
+#        res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
+#        res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
+#        res.status_code = 404
+#        return res
     valuesDict = {}
     valuesDict[constants.table_fks[table1_id+"_"+table2_id][1]] = project_id2
     valuesDict[constants.table_fks[table1_id+"_"+table2_id][2]] = project_id1
@@ -704,10 +926,14 @@ def add_to_existing(table1_id, project_id1, table2_id, project_id2):
 @app.route('/db<table1_id>/<project_id1>/db<table2_id>', methods = ['POST'])
 def add_to_specific(table1_id, project_id1, table2_id):
 #    if "Authorization" not in request.headers:
-#        return Response(
-#            status=404,
-#            response=json.dumps({"Error":"Page does not exist"}),
-#        )
+#        res = make_response(json.dumps({"Error":"Page does not exist"}))
+#        res.mimetype = 'application/json'
+#        res.headers.set('Access-Control-Allow-Origin', '*')
+#        res.headers.set('Content-Type', 'application/json')
+#        res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
+#        res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
+#        res.status_code = 404
+#        return res
     valuesDict = {}
     valuesDict[constants.table_fks[table1_id+"_"+table2_id][2]] = project_id1
     # print (valuesDict)
@@ -716,30 +942,157 @@ def add_to_specific(table1_id, project_id1, table2_id):
 @app.route('/db<table1_id>/<project_id1>/db<table2_id>/<project_id2>', methods = ['DELETE'])
 def remove_from_existing(table1_id, project_id1, table2_id, project_id2):
 #    if "Authorization" not in request.headers:
-#        return Response(
-#            status=404,
-#            response=json.dumps({"Error":"Page does not exist"}),
-#        )
+#        res = make_response(json.dumps({"Error":"Page does not exist"}))
+#        res.mimetype = 'application/json'
+#        res.headers.set('Access-Control-Allow-Origin', '*')
+#        res.headers.set('Content-Type', 'application/json')
+#        res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
+#        res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
+#        res.status_code = 404
+#        return res
 
     return delete_one_join(table1_id, project_id1, table2_id, project_id2)
 
 @app.route('/db<table1_id>/<project_id1>/db<table2_id>', methods = ['DELETE'])
 def remove_from_table(table1_id, project_id1, table2_id):
 #    if "Authorization" not in request.headers:
-#        return Response(
-#            status=404,
-#            response=json.dumps({"Error":"Page does not exist"}),
-#        )
+#        res = make_response(json.dumps({"Error":"Page does not exist"}))
+#        res.mimetype = 'application/json'
+#        res.headers.set('Access-Control-Allow-Origin', '*')
+#        res.headers.set('Content-Type', 'application/json')
+#        res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
+#        res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
+#        res.status_code = 404
+#        return res
     return delete_all_specific(table1_id, project_id1, table2_id)
+
+
+@app.route('/db<table1_id>/<project_id>/db<table2_id>/count', methods = ['GET', 'OPTIONS'])
+def get_other_table_count(table1_id, project_id, table2_id):
+#    if "Authorization" not in request.headers:
+#        res = make_response(json.dumps({"Error":"Page does not exist"}))
+#        res.mimetype = 'application/json'
+#        res.headers.set('Access-Control-Allow-Origin', '*')
+#        res.headers.set('Content-Type', 'application/json')
+#        res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
+#        res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
+#        res.status_code = 404
+#        return res
+    if request.method == 'OPTIONS':
+        res = make_response(json.dumps({"Success":"Success"}))
+        res.mimetype = 'application/json'
+        res.headers.set('Access-Control-Allow-Origin', '*')
+        res.headers.set('Content-Type', 'application/json')
+        res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
+        res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
+        res.status_code = 204
+        return res
+
+    if table2_id == "observations" and table1_id == "prompts":
+
+        # get limit and offset
+        try:
+            q_limit = min(int(request.args.get('limit', '0')),MAX_LIMIT)
+        except:
+            q_limit = MAX_LIMIT
+
+        try:
+            q_offset = int(request.args.get('offset', '0'))
+        except:
+            q_offset = 0
+
+        #get order by column or use default
+        q_order_by = (request.args.get('order_by', constants.table_pks["classes"]))
+
+
+
+        stmt = """SELECT COUNT(observations.response) as response_count, 
+        observations.response, observations.prompt_id 
+        FROM observations 
+        GROUP BY observations.response, observations.prompt_id HAVING observations.prompt_id= %s"""
+        # print(stmt)
+
+        # query database
+        try:
+            with db.connect() as conn:
+
+                count = conn.execute("SELECT COUNT(*)" + """ FROM observations
+                    WHERE observations.prompt_id = %s""", project_id)
+                id_count =0
+                for v in count:
+                    for column, value in v.items():
+                            id_count = value
+                if q_limit == 0:
+                    projects = conn.execute(stmt+ " order by observations.response", project_id).fetchall()
+                else:
+                    projects = conn.execute(stmt+ " order by observations.response" + " limit %s offset %s", project_id, q_limit, q_offset).fetchall()
+
+
+            results = []
+            for v in projects:
+                project ={}
+                for column, value in v.items():
+                    project[column] = format_values(value)
+                # project = createLinks(project, table2_id, str(v[constants.table_pks[table2_id]]))
+                results.append(project)
+
+            if len(results) < q_limit or q_limit==0:
+                next_set = None
+            else:
+                next_set = (constants.app_url  + 'db' + table1_id + "/" + project_id + "/dbobservations"  + "?" + "order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset + q_limit))
+
+            if q_offset == 0:
+                prev_set = None
+            else:
+                prev_set = (constants.app_url  + 'db' + table1_id + "/" + project_id + "/dbobservations"  + "?" + "order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset - q_limit))
+
+            all_projects=dict({"count":id_count, 
+                                "prev": prev_set, 
+                                "next": next_set, 
+                                "limit": q_limit,
+                                "offset": q_offset,
+                                "results":results})
+
+
+        except Exception as e:
+            logger.exception(e)
+            return Response(
+                status=500,
+                response="Unable to successfully cast vote! Please check the "
+                "application logs for more details. '{}'".format(e),
+            )
+
+
+        res = make_response(json.dumps(all_projects))
+        res.mimetype = 'application/json'
+        res.headers.set('Access-Control-Allow-Origin', '*')
+        res.headers.set('Content-Type', 'application/json')
+        res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
+        res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
+        res.status_code = 200
+        return res
 
 
 @app.route('/db<table1_id>/<project_id>/db<table2_id>', methods = ['GET', 'OPTIONS'])
 def get_other_table(table1_id, project_id, table2_id):
 #    if "Authorization" not in request.headers:
-#        return Response(
-#            status=404,
-#            response=json.dumps({"Error":"Page does not exist"}),
-#        )
+#        res = make_response(json.dumps({"Error":"Page does not exist"}))
+#        res.mimetype = 'application/json'
+#        res.headers.set('Access-Control-Allow-Origin', '*')
+#        res.headers.set('Content-Type', 'application/json')
+#        res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
+#        res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
+#        res.status_code = 404
+#        return res
+    if request.method == 'OPTIONS':
+        res = make_response(json.dumps({"Success":"Success"}))
+        res.mimetype = 'application/json'
+        res.headers.set('Access-Control-Allow-Origin', '*')
+        res.headers.set('Content-Type', 'application/json')
+        res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
+        res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
+        res.status_code = 204
+        return res
 
     if table2_id == "prompts" and table1_id == "projects":
 
@@ -790,12 +1143,12 @@ def get_other_table(table1_id, project_id, table2_id):
             if len(results) < q_limit or q_limit==0:
                 next_set = None
             else:
-                next_set = (constants.app_url  + table1_id + "/" + project_id + "/prompts"  + "?" + "order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset + q_limit))
+                next_set = (constants.app_url  + 'db' + table1_id + "/" + project_id + "/prompts"  + "?" + "order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset + q_limit))
 
             if q_offset == 0:
                 prev_set = None
             else:
-                prev_set = (constants.app_url  + table1_id + "/" + project_id + "/prompts"  + "?" + "order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset - q_limit))
+                prev_set = (constants.app_url  + 'db' + table1_id + "/" + project_id + "/prompts"  + "?" + "order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset - q_limit))
 
             all_projects=dict({"count":id_count, 
                                 "prev": prev_set, 
@@ -818,6 +1171,7 @@ def get_other_table(table1_id, project_id, table2_id):
         res.mimetype = 'application/json'
         res.headers.set('Access-Control-Allow-Origin', '*')
         res.headers.set('Content-Type', 'application/json')
+        res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
         res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
         res.status_code = 200
         return res
@@ -871,12 +1225,12 @@ def get_other_table(table1_id, project_id, table2_id):
             if len(results) < q_limit or q_limit==0:
                 next_set = None
             else:
-                next_set = (constants.app_url  + table1_id + "/" + project_id + "/prompts"  + "?" + "order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset + q_limit))
+                next_set = (constants.app_url  + 'db' + table1_id + "/" + project_id + "/prompts"  + "?" + "order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset + q_limit))
 
             if q_offset == 0:
                 prev_set = None
             else:
-                prev_set = (constants.app_url  + table1_id + "/" + project_id + "/prompts"  + "?" + "order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset - q_limit))
+                prev_set = (constants.app_url  + 'db' + table1_id + "/" + project_id + "/prompts"  + "?" + "order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset - q_limit))
 
             all_projects=dict({"count":id_count, 
                                 "prev": prev_set, 
@@ -899,6 +1253,7 @@ def get_other_table(table1_id, project_id, table2_id):
         res.mimetype = 'application/json'
         res.headers.set('Access-Control-Allow-Origin', '*')
         res.headers.set('Content-Type', 'application/json')
+        res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
         res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
         res.status_code = 200
         return res
@@ -950,14 +1305,14 @@ def get_other_table(table1_id, project_id, table2_id):
                     ON observations.prompt_id = prompts.id
                     INNER JOIN projects
                     ON prompts.project_id = projects.id
-                    WHERE projects.id = %s"""+ " order by observations.id", project_id).fetchall()
+                    WHERE projects.id = %s"""+ " order by observations.id DESC", project_id).fetchall()
                 else:
                     projects = conn.execute("""SELECT projects.name, prompts.subheading, prompts.description, observations.* FROM observations
                     INNER JOIN prompts
                     ON observations.prompt_id = prompts.id
                     INNER JOIN projects
                     ON prompts.project_id = projects.id
-                    WHERE projects.id = %s"""+ " order by observations.id" + " limit %s offset %s", project_id, q_limit, q_offset).fetchall()
+                    WHERE projects.id = %s"""+ " order by observations.id DESC" + " limit %s offset %s", project_id, q_limit, q_offset).fetchall()
 
 
             results = []
@@ -971,12 +1326,12 @@ def get_other_table(table1_id, project_id, table2_id):
             if len(results) < q_limit or q_limit==0:
                 next_set = None
             else:
-                next_set = (constants.app_url  + table1_id + "/" + project_id + "/prompts"  + "?" + "order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset + q_limit))
+                next_set = (constants.app_url  + 'db' + table1_id + "/" + project_id + "/prompts"  + "?" + "order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset + q_limit))
 
             if q_offset == 0:
                 prev_set = None
             else:
-                prev_set = (constants.app_url  + table1_id + "/" + project_id + "/prompts"  + "?" + "order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset - q_limit))
+                prev_set = (constants.app_url  + 'db' + table1_id + "/" + project_id + "/prompts"  + "?" + "order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset - q_limit))
 
             all_projects=dict({"count":id_count, 
                                 "prev": prev_set, 
@@ -999,6 +1354,201 @@ def get_other_table(table1_id, project_id, table2_id):
         res.mimetype = 'application/json'
         res.headers.set('Access-Control-Allow-Origin', '*')
         res.headers.set('Content-Type', 'application/json')
+        res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
+        res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
+        res.status_code = 200
+        return res
+
+    elif table2_id == "observations" and table1_id == "prompts":
+
+        # get limit and offset
+        try:
+            q_limit = min(int(request.args.get('limit', '0')),MAX_LIMIT)
+        except:
+            q_limit = MAX_LIMIT
+
+        try:
+            q_offset = int(request.args.get('offset', '0'))
+        except:
+            q_offset = 0
+
+        #get order by column or use default
+        q_order_by = (request.args.get('order_by', constants.table_pks["classes"]))
+
+
+
+        stmt = """SELECT prompts.subheading, prompts.description, observations.* 
+        FROM observations
+        INNER JOIN prompts
+        ON observations.prompt_id = prompts.id
+
+        WHERE prompts.id = %s"""
+        # print(stmt)
+
+        # query database
+        try:
+            with db.connect() as conn:
+
+                count = conn.execute("SELECT COUNT(*)" + """ FROM observations
+                    INNER JOIN prompts
+                    ON observations.prompt_id = prompts.id
+                    WHERE prompts.id = %s""", project_id)
+                id_count =0
+                for v in count:
+                    for column, value in v.items():
+                            id_count = value
+                if q_limit == 0:
+                    projects = conn.execute("""SELECT prompts.subheading, prompts.description, observations.* FROM observations
+                    INNER JOIN prompts
+                    ON observations.prompt_id = prompts.id
+                    WHERE prompts.id = %s"""+ " order by observations.id DESC", project_id).fetchall()
+                else:
+                    projects = conn.execute("""SELECT prompts.subheading, prompts.description, observations.* FROM observations
+                    INNER JOIN prompts
+                    ON observations.prompt_id = prompts.id
+                    WHERE prompts.id = %s"""+ " order by observations.id DESC" + " limit %s offset %s", project_id, q_limit, q_offset).fetchall()
+
+
+            results = []
+            for v in projects:
+                project ={}
+                for column, value in v.items():
+                    project[column] = format_values(value)
+                project = createLinks(project, table2_id, str(v[constants.table_pks[table2_id]]))
+                results.append(project)
+
+            if len(results) < q_limit or q_limit==0:
+                next_set = None
+            else:
+                next_set = (constants.app_url  + 'db' + table1_id + "/" + project_id + "/dbobservations"  + "?" + "order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset + q_limit))
+
+            if q_offset == 0:
+                prev_set = None
+            else:
+                prev_set = (constants.app_url  + 'db' + table1_id + "/" + project_id + "/dbobservations"  + "?" + "order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset - q_limit))
+
+            all_projects=dict({"count":id_count, 
+                                "prev": prev_set, 
+                                "next": next_set, 
+                                "limit": q_limit,
+                                "offset": q_offset,
+                                "results":results})
+
+
+        except Exception as e:
+            logger.exception(e)
+            return Response(
+                status=500,
+                response="Unable to successfully cast vote! Please check the "
+                "application logs for more details. '{}'".format(e),
+            )
+
+
+        res = make_response(json.dumps(all_projects))
+        res.mimetype = 'application/json'
+        res.headers.set('Access-Control-Allow-Origin', '*')
+        res.headers.set('Content-Type', 'application/json')
+        res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
+        res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
+        res.status_code = 200
+        return res
+
+    elif table2_id == "observations" and table1_id == "users":
+
+        # get limit and offset
+        try:
+            q_limit = min(int(request.args.get('limit', '0')),MAX_LIMIT)
+        except:
+            q_limit = MAX_LIMIT
+
+        try:
+            q_offset = int(request.args.get('offset', '0'))
+        except:
+            q_offset = 0
+
+        #get order by column or use default
+        q_order_by = (request.args.get('order_by', constants.table_pks["classes"]))
+
+
+
+        stmt = """SELECT projects.name, prompts.subheading, prompts.description, observations.* 
+        FROM observations
+        INNER JOIN prompts
+        ON observations.prompt_id = prompts.id
+        INNER JOIN projects
+        ON prompts.project_id = projects.id
+        INNER JOIN project_users
+        ON project_users.project_id = projects.id
+        INNER JOIN users
+        ON users.id = project_users.user_id
+        WHERE users.id = %s"""
+        # print(stmt)
+
+        # query database
+        try:
+            with db.connect() as conn:
+
+                count = conn.execute("SELECT COUNT(*)" + """ 
+                    FROM observations
+                    INNER JOIN prompts
+                    ON observations.prompt_id = prompts.id
+                    INNER JOIN projects
+                    ON prompts.project_id = projects.id
+                    INNER JOIN project_users
+                    ON project_users.project_id = projects.id
+                    INNER JOIN users
+                    ON users.id = project_users.user_id
+                    WHERE users.id = %s""", project_id)
+                id_count =0
+                for v in count:
+                    for column, value in v.items():
+                            id_count = value
+                if q_limit == 0:
+                    projects = conn.execute(stmt + " order by observations.id", project_id).fetchall()
+                else:
+                    projects = conn.execute(stmt + " order by observations.id" + " limit %s offset %s", project_id, q_limit, q_offset).fetchall()
+
+
+            results = []
+            for v in projects:
+                project ={}
+                for column, value in v.items():
+                    project[column] = format_values(value)
+                project = createLinks(project, table2_id, str(v[constants.table_pks[table2_id]]))
+                results.append(project)
+
+            if len(results) < q_limit or q_limit==0:
+                next_set = None
+            else:
+                next_set = (constants.app_url  + 'db' + table1_id + "/" + project_id + "/prompts"  + "?" + "order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset + q_limit))
+
+            if q_offset == 0:
+                prev_set = None
+            else:
+                prev_set = (constants.app_url  + 'db' + table1_id + "/" + project_id + "/prompts"  + "?" + "order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset - q_limit))
+
+            all_projects=dict({"count":id_count, 
+                                "prev": prev_set, 
+                                "next": next_set, 
+                                "limit": q_limit,
+                                "offset": q_offset,
+                                "results":results})
+
+
+        except Exception as e:
+            logger.exception(e)
+            return Response(
+                status=500,
+                response="Unable to successfully cast vote! Please check the "
+                "application logs for more details. '{}'".format(e),
+            )
+
+
+        res = make_response(json.dumps(all_projects))
+        res.mimetype = 'application/json'
+        res.headers.set('Access-Control-Allow-Origin', '*')
+        res.headers.set('Content-Type', 'application/json')
+        res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
         res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
         res.status_code = 200
         return res
@@ -1057,12 +1607,12 @@ def get_other_table(table1_id, project_id, table2_id):
             if len(results) < q_limit or q_limit==0:
                 next_set = None
             else:
-                next_set = (constants.app_url  + table1_id + "/" + project_id + "/prompts"  + "?" + "order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset + q_limit))
+                next_set = (constants.app_url  + 'db' + table1_id + "/" + project_id + "/prompts"  + "?" + "order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset + q_limit))
 
             if q_offset == 0:
                 prev_set = None
             else:
-                prev_set = (constants.app_url  + table1_id + "/" + project_id + "/prompts"  + "?" + "order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset - q_limit))
+                prev_set = (constants.app_url  + 'db' + table1_id + "/" + project_id + "/prompts"  + "?" + "order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset - q_limit))
 
             all_projects=dict({"count":id_count, 
                                 "prev": prev_set, 
@@ -1085,6 +1635,7 @@ def get_other_table(table1_id, project_id, table2_id):
         res.mimetype = 'application/json'
         res.headers.set('Access-Control-Allow-Origin', '*')
         res.headers.set('Content-Type', 'application/json')
+        res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
         res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
         res.status_code = 200
         return res
@@ -1092,10 +1643,14 @@ def get_other_table(table1_id, project_id, table2_id):
 
 
     if table1_id not in constants.table_attributes.keys() or table2_id not in constants.table_attributes.keys():
-        return Response(
-            status=404,
-            response=json.dumps({"Error":"Page does not exist"}),
-        )
+        res = make_response(json.dumps({"Error":"Page does not exist"}))
+        res.mimetype = 'application/json'
+        res.headers.set('Access-Control-Allow-Origin', '*')
+        res.headers.set('Content-Type', 'application/json')
+        res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
+        res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
+        res.status_code = 404
+        return res
 
     return list_all_specific(table2_id, constants.table_pks[table2_id], constants.table_fks[table1_id + "_" + table2_id], project_id)
 
@@ -1113,10 +1668,14 @@ def upload():
     # print(uploaded_file)
 
     if not uploaded_file:
-        return Response(
-            status=404,
-            response=json.dumps({"Error": "invalid image"}),
-        )
+            res = make_response(json.dumps({"Error": "invalid image"}))
+            res.mimetype = 'application/json'
+            res.headers.set('Access-Control-Allow-Origin', '*')
+            res.headers.set('Content-Type', 'application/json')
+            res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
+            res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
+            res.status_code = 404
+            return res
     # Create a Cloud Storage client.
     gcs = storage.Client()
 
@@ -1139,6 +1698,7 @@ def upload():
     res.mimetype = 'application/json'
     res.headers.set('Access-Control-Allow-Origin', '*')
     res.headers.set('Content-Type', 'application/json')
+    res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
     res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
     res.status_code = 201
     return res
@@ -1186,11 +1746,20 @@ def list_all_general(table_name, order_by):
             if table_name == 'teachers':
                 if q_limit == 0:
                     projects = conn.execute(
-                       create_select("Select users.* teachers.* from teachers inner join users on users.id = teachers.user_id") + " order by " + q_order_by
+                       "Select users.*, teachers.* from teachers inner join users on users.id = teachers.user_id" + " order by " + q_order_by
                     ).fetchall()
                 else:
                     projects = conn.execute(
-                       create_select("Select users.* teachers.* from teachers inner join users on users.id = teachers.user_id") + " order by " + q_order_by + " limit %s offset %s", q_limit, q_offset
+                       "Select users.*, teachers.* from teachers inner join users on users.id = teachers.user_id" + " order by " + q_order_by + " limit %s offset %s", q_limit, q_offset
+                    ).fetchall()
+            elif table_name == 'projects':
+                if q_limit == 0:
+                    projects = conn.execute(
+                       "Select projects.*, teachers.title, users.first_name, users.last_name from projects inner join teachers on projects.creator_id = teachers.user_id inner join users on users.id = teachers.user_id" + " order by " + q_order_by
+                    ).fetchall()
+                else:
+                    projects = conn.execute(
+                       "Select projects.*, teachers.title, users.first_name, users.last_name from projects inner join teachers on projects.creator_id = teachers.user_id inner join users on users.id = teachers.user_id" + " order by " + q_order_by + " limit %s offset %s", q_limit, q_offset
                     ).fetchall()
             else:
                 if q_limit == 0:
@@ -1213,12 +1782,12 @@ def list_all_general(table_name, order_by):
         if len(results) < q_limit or q_limit==0:
             next_set = None
         else:
-            next_set = (constants.app_url  + table_name + "?" + "order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset + q_limit))
+            next_set = (constants.app_url  + "db" + table_name + "?" + "order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset + q_limit))
 
         if q_offset == 0:
             prev_set = None
         else:
-            prev_set = (constants.app_url  + table_name + "?" + "order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset - q_limit))
+            prev_set = (constants.app_url  + "db" + table_name + "?" + "order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset - q_limit))
 
         all_projects=dict({"count":id_count, 
                             "prev": prev_set, 
@@ -1240,6 +1809,7 @@ def list_all_general(table_name, order_by):
     res.mimetype = 'application/json'
     res.headers.set('Access-Control-Allow-Origin', '*')
     res.headers.set('Content-Type', 'application/json')
+    res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
     res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
     res.status_code = 200
     return res
@@ -1302,7 +1872,7 @@ def list_all_specific(table_name, primary_key, foreign_key, specific_id):
 
                 if q_limit == 0:
                     projects = conn.execute(
-                       stmt + " order by " + q_order_by, specific_id
+                       stmt + " order by " + q_order_by , specific_id
                     ).fetchall()
                 else:
                     projects = conn.execute(
@@ -1320,12 +1890,12 @@ def list_all_specific(table_name, primary_key, foreign_key, specific_id):
         if len(results) < q_limit or q_limit==0:
             next_set = None
         else:
-            next_set = (constants.app_url  + table_name + "/" + specific_id + "/" + foreign_key[0] + "?" + "order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset + q_limit))
+            next_set = (constants.app_url  + "db" + table_name + "/" + specific_id + "/" + foreign_key[0] + "?" + "order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset + q_limit))
 
         if q_offset == 0:
             prev_set = None
         else:
-            prev_set = (constants.app_url  + table_name + "/" + specific_id + "/" + foreign_key[0] + "?" + "order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset - q_limit))
+            prev_set = (constants.app_url  + "db" + table_name + "/" + specific_id + "/" + foreign_key[0] + "?" + "order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset - q_limit))
 
         all_projects=dict({"count":id_count, 
                             "prev": prev_set, 
@@ -1348,6 +1918,7 @@ def list_all_specific(table_name, primary_key, foreign_key, specific_id):
     res.mimetype = 'application/json'
     res.headers.set('Access-Control-Allow-Origin', '*')
     res.headers.set('Content-Type', 'application/json')
+    res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
     res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
     res.status_code = 200
     return res
@@ -1371,10 +1942,14 @@ def list_one(table_name, table_pk, key_val, post=False):
                 ).fetchall()
 
         if len(projects) == 0:
-            return Response(
-                status=404,
-                response=json.dumps({"Error": "ID (" + str(key_val) + ") does not exist in table (" + table_name + ")."}),
-            )
+            res = make_response(json.dumps({"Error": "ID (" + str(key_val) + ") does not exist in table (" + table_name + ")."}))
+            res.mimetype = 'application/json'
+            res.headers.set('Access-Control-Allow-Origin', '*')
+            res.headers.set('Content-Type', 'application/json')
+            res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
+            res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
+            res.status_code = 404
+            return res
 
         for v in projects:
 
@@ -1397,6 +1972,7 @@ def list_one(table_name, table_pk, key_val, post=False):
         res.mimetype = 'application/json'
         res.headers.set('Access-Control-Allow-Origin', '*')
         res.headers.set('Content-Type', 'application/json')
+        res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
         res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
         res.status_code = 201
         return res
@@ -1405,6 +1981,7 @@ def list_one(table_name, table_pk, key_val, post=False):
         res.mimetype = 'application/json'
         res.headers.set('Access-Control-Allow-Origin', '*')
         res.headers.set('Content-Type', 'application/json')
+        res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
         res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
         res.status_code = 200
         return res
@@ -1413,7 +1990,7 @@ def list_one(table_name, table_pk, key_val, post=False):
 
 
 def update_item(table_name, table_pk, key_val):
-    content = request.get_json()
+    content = request.get_json(force=True)
     if content != None:
         error_list = verify_contents(content, constants.table_updates[table_name], constants.table_attributes_optional[table_name])
         if error_list:
@@ -1479,6 +2056,7 @@ def delete_all(table_name):
     res.mimetype = 'application/json'
     res.headers.set('Access-Control-Allow-Origin', '*')
     res.headers.set('Content-Type', 'application/json')
+    res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
     res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
     res.status_code = 204
     return res
@@ -1507,6 +2085,7 @@ def delete_one(table_name, table_pk, key_val):
     res.mimetype = 'application/json'
     res.headers.set('Access-Control-Allow-Origin', '*')
     res.headers.set('Content-Type', 'application/json')
+    res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
     res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
     res.status_code = 204
     return res
@@ -1535,6 +2114,7 @@ def delete_one_join(table1_name, table1_pk, table2_name, table2_pk):
     res.mimetype = 'application/json'
     res.headers.set('Access-Control-Allow-Origin', '*')
     res.headers.set('Content-Type', 'application/json')
+    res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
     res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
     res.status_code = 204
     return res
@@ -1562,6 +2142,7 @@ def delete_all_specific(table1_name, table1_pk, table2_name):
     res.mimetype = 'application/json'
     res.headers.set('Access-Control-Allow-Origin', '*')
     res.headers.set('Content-Type', 'application/json')
+    res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
     res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
     res.status_code = 204
     return res
@@ -1573,7 +2154,7 @@ def insert_item(table_name, table_pk, auto_inc=True, valuesDict={}):
     if empty:
         content = valuesDict
     else:
-        content = request.get_json()
+        content = request.get_json(force=True)
         # print(content)
         if content == None:
             content = valuesDict
@@ -1588,6 +2169,9 @@ def insert_item(table_name, table_pk, auto_inc=True, valuesDict={}):
         if table_name != "users":
             error_list = verify_contents(content, constants.table_attributes[table_name], constants.table_attributes_optional[table_name])
             if error_list:
+                logger.exception(content)
+                logger.exception(", ".join(error_list))
+
                 return Response(
                     status=400,
                     response=json.dumps({"Error": "The request object contains invalid attributes or is missing attributes: " + ", ".join(error_list)}),
@@ -1735,6 +2319,7 @@ def insert_item(table_name, table_pk, auto_inc=True, valuesDict={}):
     res.mimetype = 'application/json'
     res.headers.set('Access-Control-Allow-Origin', '*')
     res.headers.set('Content-Type', 'application/json')
+    res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
     res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
     res.status_code = 201
     return res

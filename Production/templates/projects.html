@@ -4,6 +4,11 @@
     <meta charset="utf-8">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="/path/to/infinite-scroll.pkgd.min.js"></script>
+    <script src="/static/scripts/fetch_functions.js"></script>
+    <script src="/static/scripts/api_calls.js"></script>
+    <script src="/static/scripts/projects.js"></script>
     <link rel="stylesheet" type="text/css" href="/static/css/main.css" />
     <link rel="stylesheet" type="text/css" href="/static/css/projects.css" />
     <title>WonderBar - Projects</title>
@@ -34,83 +39,38 @@
         <div id="mainContent-wrap">
 			<input hidden type="text" id="user_id" value="{{ session['user_id'] }}"></input>
 			<input hidden type="text" id="user_type" value="{{ session['user_type'] }}"></input>
+			<div id="background">
+				<img src="/static/images/mountian-background-1.jpg" alt="">
+			</div>
             <div class="project-buttons">
-                <a href="#">Find A Project</a>
-                <a href="/addProject">Make A Project</a>
+                <div class="row">
+                    <div class="left-column">
+                        <a href="#">Find A Project</a>
+                    </div>
+            {% if session['user_type'] == 'teacher' %}
+                    <div class="right-column">
+                        <a href="/addProject">Make A Project</a>
+                    </div>
+            {% endif %}
+                </div>
             </div>
             <div class="projects-header">
-                <h1>Recent Projects</h1>
+                <h1 id="proj-header">Recent Projects</h1>
             </div>
+                <select onchange="update_results()" name="results_number" id="results_number">
+                  <option selected value="10">View 10</option>
+                  <option value="25">View 25</option>
+                  <option value="50">View 50</option>
+                  <option value="All">View All</option>
+                </select>
+                <select onchange="update_results()" name="order_by" id="order_by">
+                  <option selected value="id%20DESC">Date (Newest to Oldest)</option>
+                  <option value="id%20ASC ">Date (Oldest to Newest)</option>
+                  <option value="name%20DESC">Name A-Z</option>
+                  <option value="name%20ASC">Name Z-A</option>
+                  <option value="creator_id%20ASC">Creator</option>
+                </select>
             <div id="recent-project-list">
-                <div class="project">
-                    <a href="/tempProject">
-                        <div class="projectTitle">
-                            <h1>Christmas Bird Count</h1>
-                            <h2>Professor W.</h2>
-                        </div>
-                        <div class="projectContent">
-                            <div class="projectImage">
-                                <img src="/static/images/bird1.jpg" alt="Placeholder">
-                            </div>
-                            <div class="projectText">
-                                <p>
-                                    The Christmas Bird Count is an annual census of birds organized by the Audubon Society 
-                                    and conducted by volunteer birders around the United States. Data from the count revealed 
-                                    climate change is causing a reduction in the population of birds. Since 2009, they've 
-                                    released a number of surveys and studies that investigate and illustrate how global 
-                                    warming is disrupting the environment.
-                                </p>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="project">
-                    <div class="projectTitle">
-                        <h1>Project Budburst</h1>
-                        <h2>Professor X.</h2>
-                    </div>
-                    <div class="projectContent">
-                        <div class="projectImage">
-                            <img src="/static/images/flower1.jpg" alt="Placeholder">
-                        </div>
-                        <div class="projectText">
-                            <p>
-                                At Budburst, we believe that the beauty of nature should be enjoyed by all of us. That’s why 
-                                we bring together researchers, educators, and community scientists to help answer important 
-                                questions around the effects of climate change on plants and animals—and how we can mitigate 
-                                those effects.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="project">
-                    <div class="projectTitle">
-                        <h1>Appalachian View Guides</h1>
-                        <h2>Professor Y.</h2>
-                    </div>
-                    <div class="projectContent">
-                        <div class="projectImage">
-                            <img src="/static/images/mountain.jpg" alt="Placeholder">
-                        </div>
-                        <div class="projectText">
-                            <p>
-                                The relationships between pollution, respiratory health, and exercise aren't fully understood. 
-                                While air quality data helps scientists understand how pollutants affect breathing, a limited 
-                                pool of data means they don't have the full picture. Those dedicated to preserving the Earth 
-                                can volunteer to help.
-                            </p>
-                            <p>
-                                Appalachian Mountain Club's view guides are volunteer hikers who measure visibility from trails. 
-                                Combined with local health information, scientists use the visibility data collected to better 
-                                understand the relationship between haze, pollution, and the effectiveness of exercise. The Club 
-                                also publishes reports on the visibility of specific hikes, allowing people to plan their trips 
-                                in and through Appalachia.
-                            </p>
-                        </div>
-                    </div>
-                </div>
 
             </div>
         </div>

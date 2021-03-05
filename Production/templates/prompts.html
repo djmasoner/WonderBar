@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
+		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyACWR7r7iEOXFdRlsGhpXvF-EiqvCR9vUo"></script>
+		<link rel="stylesheet" type="text/css" href="/static/css/main.css" />
+		<link rel="stylesheet" type="text/css" href="/static/css/projects.css" />
+		<link rel="stylesheet" type="text/css" href="/static/css/newObserv.css" />
+		<link rel="stylesheet" type="text/css" href="/static/css/createProject.css" />
+		<link rel="stylesheet" type="text/css" href="/static/css/prompts.css" />
+		<script src="/static/scripts/fetch_functions.js"></script>
+		<script src="./static/scripts/api_calls.js"></script>
+		<script src="/static/scripts/prompts.js"></script>
+ 		<title>WonderBar - Add Observations</title>
+<!-- 		<style >
+			
+			.tab {
+				display: block;
+			}
+		</style> -->
+
+	</head>
+	<body>
+    <div id="mainContent">
+        <header class="masthead mb-auto">
+            <div class="inner">
+                <h3 class="masthead-brand">WonderBar</h3>
+                <nav class="nav nav-masthead justify-content-center">
+                    <a class="nav-link" href="/">Home</a>
+                    <a class="nav-link" href="/projects">Projects</a>
+            {% if session['user_type'] == 'teacher' %}
+                    <a class="nav-link" href="/teachers">Teachers</a>
+            {% endif %}
+                    <a class="nav-link" href="/profile">Profile</a>
+                    <a class="nav-link" href="/about">About</a>
+            {% if session['logged_in'] %}
+                    <a class="nav-link" href="/logout">Logout</a>
+            {% else %}
+                    <a class="nav-link" href="/oauth">Login</a>
+            {% endif %}
+                </nav>
+            </div>
+        </header>
+        <div id="mainContent-wrap">
+			<input hidden type="text" id="user_id" value="{{ session['user_id'] }}"></input>
+			<input hidden type="text" id="user_type" value="{{ session['user_type'] }}"></input>
+			<div id="background">
+				<img src="/static/images/mountian-background-1.jpg" alt="">
+			</div>
+			<form id="regForm" action="/projects" method="post">
+				<!-- One "tab" for each step in the form: -->
+				<div class="project" id="project">
+<!-- 					<div id="loader"></div>
+ -->
+					<div class="tab" id="location_info">
+			            <div class="projectTitle">
+	                        <div class="row">
+                                <h1>New Observation</h1>
+                                <h2>Share Location</h2>
+	                        </div>
+	          		 	 </div>
+		            	<div class="projectContent">
+							<div class="row">
+								<p><label id="location-radio-label" for="share_location">Would you like to share your location? *</label></p>
+								<div class="location-radio">
+									<input type="radio" id="location_yes" name="share_location" value="true" onclick="javascript:yesnoCheck();">
+									<label for="location_yes">Yes</label>
+									<input type="radio" id="location_no" name="share_location" value="false" onclick="javascript:yesnoCheck();">
+									<label for="location_no">No</label>
+								</div>
+							</div>
+							<hr>
+							<div class="row add-location">
+								<div class="left-column">
+									<label hidden for="project_name">Your Location (Coordinates)</label>
+								</div>
+								<div class="right-column">
+									<p><input hidden disabled readonly type="text" id="coordinate" placeholder="Click on the map below to find the geographical coordinates of your observation!"/></p>
+								</div>
+							</div>
+							<div class="row add-location">
+								<div class="left-column">
+									<label for="map_slot">Map (Drop a pin to update your location)</label>
+								</div>
+								<div class="right-column">
+									<div id="loader"></div>
+									<p><div id="map"></div></p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div style="overflow:auto;" id="overflow">
+						<hr>
+						<div style="float:right;">
+							<button type="button" id="prevBtn" onclick="nextPrev(-1)">Previous</button>
+							<button type="button" id="nextBtn" onclick="nextPrev(1)">Next</button>
+						</div>
+					</div>
+					<!-- Circles which indicates the steps of the form: -->
+					<div id="steps" style="text-align:center;margin-top:40px;">
+						<span class="step"></span>
+
+				</div>
+			</form>
+		</div>
+        <footer id="footer">
+            <ul id="footerList">
+                <li><p>Programmed by Monique Glasgow, Diana Masoner, and Sydney Walter</p></li>
+                <li style="float:right"><a href="/empty">Site Map</a></li>
+            </ul>
+        </footer>
+    </div>
+	</body>
+</html>
