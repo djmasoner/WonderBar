@@ -1,9 +1,5 @@
-#mainContent {
-	background: transparent;
-}
-
 #regForm {
-	background-color: transparent;
+	background-color: #ffffff;
 	margin: 5% auto;
 	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 	/*padding: 40px;*/
@@ -11,52 +7,27 @@
 	min-width: 300px;
 }
 
-#background {
-    position: fixed;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    z-index: -1;
-}
-
-#background img {
-    position: absolute;
-    opacity: 0.5;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    margin: auto;
-    min-width: 50%;
-    min-height: 50%;
-}
-
-
 .projectContent {
     display: block;
-    padding: 16px;
 }
 
-.projectContent label {
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--theme4);
-}
-
-.media-files {
+#project_avatar {
     display: block;
-    text-align: center;
 }
 
 #avatar {
 	width: 100%;
+	background-color: white;
 }
 
-input[type=checkbox]:checked{
-	  content: '\2705';
+#map {
+    width: 500px;
+    height: 500px;
+	width: 100%;
+	border: 1px solid var(--grey3);
 
 }
+
 input[type=text],
 input[type=file],
 textarea,
@@ -65,7 +36,7 @@ select {
 	width: 100%;
 	font-size: 17px;
 	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-	border: 2px solid var(--grey2);
+	border: 1px solid var(--grey3);
 }
 
 input[type=button],
@@ -77,17 +48,17 @@ input[type=button],
 	font-size: 16px;
 	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 	border: 1px solid var(--grey3);
-    border-radius: 5px;
 	margin: 2% 40%;
 }
 
 input[type=button]:hover {
-	opacity: 0.7;
+	opacity: 0.5;
 }
+
 
 /* Mark input boxes that gets an error on validation: */
 
-input.invalid, textarea.invalid, label.invalid, p.invalid, select.invalid {
+input.invalid {
 	background-color: #ffdddd;
 }
 
@@ -102,7 +73,6 @@ button {
 	background-color: var(--theme3);
 	color: #ffffff;
 	border: none;
-    border-radius: 5px;
 	padding: 10px 20px;
 	font-size: 17px;
 	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -110,7 +80,7 @@ button {
 }
 
 button:hover {
-	filter: brightness(125%);
+	opacity: 0.8;
 }
 
 #prevBtn {
@@ -119,7 +89,7 @@ button:hover {
 }
 
 #nextBtn {
-	background-color: var(--theme4);
+	/*backgrosund-color: var(--grey2);*/
 	margin: 0;
 }
 
@@ -162,15 +132,16 @@ button:hover {
 .right-column {
 	float: left;
 	width: 80%;
-	margin-top: 6px;
+	margin-top: 25px;
+	/*color: white;*/
+	/*text-align: center;*/
 }
 
 .row {
 	text-align: left;
+	margin: 0;
 }
-.add-materials {
-	display: none;
-}
+
 
 /* Clear floats after the columns */
 
@@ -181,79 +152,69 @@ button:hover {
 }
 
 
-.success-message, .error-message {
-	font-size: 14px;
-	margin-bottom: 1rem;
-	display: block;
-}
-.success-message:before {
-  content: '\2705';
-}
-
-.error-message:before {
-  content: '\274C';
-}
+/* Bordered form */
 
 #added-materials-div {
+	margin-top: 40px;
 	display: none;
+	border-collapse: collapse;
+	margin: 25px 0;
+	font-size: 16px;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	width: 100%;
+	text-align: center;
+	/*min-width: 400px;*/
+	/*float: left;*/
+	/*box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);*/
+	/*border: thick solid #ccc;*/
 }
 
-#materialsTable {
-    border-collapse: collapse;
-    padding-top: 12px;
-    font-size: 16px;
-    font-family: sans-serif;
-    float: left;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
-    border: thick solid #ccc;
-    border-radius: 8px;
-    background: white;
-}
-
-#materialsTable thead tr {
-	background-color: var(--grey2);
+#added-materials-div thead tr {
+	background-color: var(--theme4);
 	color: #ffffff;
 	text-align: center;
 }
 
-#materialsTable th,
-#materialsTable td {
+#added-materials-div th,
+#added-materials-div td {
 	padding: 12px 15px;
+	word-break: break-all;
 }
 
-#materialsTable tbody tr {
+#added-materials-div tbody tr {
 	border-bottom: 1px solid #dddddd;
 }
 
-#materialsTable tbody tr:nth-of-type(even) {
-	background-color: #f3f3f3;
-
+#added-materials-div tbody tr:nth-of-type(even) {
+	background-color: var(--grey2);
+	color: white;
 }
 
-#materialsTable tbody tr:last-of-type {
+#added-materials-div tbody tr:nth-of-type(odd) {
+	background-color: var(--grey1);
+}
+
+#added-materials-div tbody tr:last-of-type {
 	border-bottom: 2px solid #009879;
 }
 
-#materialsTable tbody tr.active-row {
+#added-materials-div tbody tr.active-row {
 	font-weight: bold;
 	color: #009879;
 }
 
-#materialsTable p {
+#added-materials-div p {
 	margin: 0;
 }
 
 #avatar_label {
-	width: 50%%;
+	width: 50%;
 }
 
-.active-media {
-	display: block;
-}
 
 /* Style the button that is used to open and close the collapsible content */
 
-.collapsible, .active-collapsible {
+.collapsible {
 	background-color: var(--theme4);
 	color: white;
 	cursor: pointer;
@@ -262,39 +223,15 @@ button:hover {
 	border: none;
 	text-align: left;
 	outline: none;
-	font-size: 16px;
-	position: relative;
+	font-size: 15px;
 }
 
-.collapsible p, .active-collapsible p{
-	margin: 0 5%;
-}
 
 /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
 
-
+.active,
 .collapsible:hover {
 	background-color: var(--grey2);
-}
-
-.active-collapsible:hover {
-	background-color: var(--theme4);
-}
-
-.collapsible:before, .active-collapsible:before {
-  color: white;
-  font-weight: bold;
-  float: left;
-  margin-left: 5px;
-  padding-right: 2%;
-}
-
-.collapsible:before {
-  content: '\002B';
-
-}
-.active-collapsible:before {
-  content: "\2212";
 }
 
 
@@ -309,23 +246,17 @@ button:hover {
 
 #addedPrompts {
 	padding-bottom: 20px;
-	text-align: left;
 	display: none;
 }
 
-#project_avatar {
-	max-height: 500px;
+#avatarImage {
+	width: 100%;
+	height: 50%;
 	/*margin: 1% 25%;*/
-	/*border: 1px solid;*/
+	border: 1px solid;
 }
 
-.media-file {
-	max-width: 100%;
-	max-height: 500px;
-	/*margin: 1% 25%;*/
-	/*border: 1px solid;*/
-}
-#delete_image, #delete_prompt_image, .delete_image {
+#deleteImage {
 	padding: 10px;
 	width: 100%;
 	font-size: 17px;
@@ -346,22 +277,20 @@ button:hover {
 		font-size: 16px;
 	}
 	.add-material-form {
-		margin-top: 40px;
 		width: 100%;
 		display: inline-block;
 		font-size: 16px;
 	}
-	.materialsTable {
-		margin-top: 40px;
+	.added-materials-div {
 		width: 100%;
 		display: inline-block;
 		font-size: 16px;
 	}
-	.media-file {
+	#avatarImage {
 		width: 100%;
 		margin: 0;
 	}
-	#delete_image {
+	#deleteImage {
 		width: 100%;
 		margin: 0;
 	}
