@@ -1,7 +1,30 @@
 ﻿#mainContent {
-    background: white;
+    background: transparent;
     text-align: center;
 }
+
+#background {
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    z-index: -1;
+}
+
+#background img {
+    position: absolute;
+    opacity: 0.5;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    min-width: 50%;
+    min-height: 50%;
+}
+
+
 
 .profile-border-outer {
     background-color: var(--theme4);
@@ -36,7 +59,7 @@
 .right-column {
     float: left;
     width: 65%;
-    text-align: left;
+    text-align: center;
 }
 
 .right-column h1 {
@@ -84,10 +107,12 @@
 #saved-projects {
     margin-bottom: 30px;
     width: 100%;
+    max-height: 300px;
+    text-align: left;
 }
 
 .saved-proj {
-    display: block;
+    display: inline-block;
     width: 100%;
     margin: 5px 0;
     padding: 8px 20px;
@@ -99,17 +124,51 @@
     font-weight: 500;
 }
 
+
+.saved-proj p{
+    display: inline-block;
+    width: 90%;
+}
+
 .saved-proj:hover {
     opacity: 0.7;
     color: white;
 }
 
-.obs-container {
+.delete-proj {
     display: block;
+    width: 100%;
     margin: 5px 0;
+    padding: 8px 20px;
+    color: white;
+    background: var(--theme4);
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+
+.delete-proj:hover {
+    opacity: 0.7;
+    color: white;
+}
+.obs-container {
+    display: inline-block;
+    margin: 5px 10px 20px;
     padding: 3px;
     background: var(--theme3);
     border-radius: 10px;
+    max-width: 115px;
+}
+
+.obs-container:hover {
+    cursor: pointer;
+    background: var(--theme4);
+}
+
+.obs-container.inactive:hover {
+    cursor: normal;
+    background: var(--theme3);
 }
 
 .obs-container h2 {
@@ -123,5 +182,91 @@
     border-radius: 7px;
     margin: 0;
     padding: 5px;
-    font-size: 1rem;
+    font-size: 20px;
+    color: black;
+}
+
+.recent_obs {
+    text-decoration: none;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 1px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: var(--grey1); 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: var(--theme5); 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: var(--grey3); 
+}
+
+
+/*
+
+.row .left-column {
+    float: left;
+    width: 15%;
+    padding: 0;
+}
+
+@media screen and (max-width: 800px) {
+    .row .left-column {
+        width: 15%;
+    }
+}
+
+.row .right-column {
+    float: left;
+    width: 85%;
+    text-align: left;
+    padding: 0;
+}
+
+.row .right-column h1 {
+    text-align: left;
+    font-size: 1.5rem;
+    width: 100%;
+    border-bottom: 2px solid var(--theme4);
+}
+
+@media screen and (max-width: 800px) {
+    .row .right-column {
+        width: 85%;
+        margin-top: 0;
+    }
+}*/
+
+
+.delete_project {
+    margin: 0;
+    cursor: pointer;
+    color: white;
+    font-weight: bold;
+    /*top: 29%;*/
+    /*right: 5%;*/
+    /*padding: .5% 1%;*/
+    /*transform: translate(0%, -50%);*/
+    /*position: absolute;*/
+    float: right;
+    width: 10%;
+    background-color: var(--theme1);
+    text-align: center;
+    border-radius: 10px;
+}
+
+.delete_project:hover,
+.delete_project:focus {
+  background: var(--theme4);
+  cursor: pointer;
 }

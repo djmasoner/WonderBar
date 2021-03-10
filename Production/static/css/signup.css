@@ -1,8 +1,29 @@
 
 .signup-form {
     margin-top: 40px;
-    width: 75%;
+    width: 95%;
     display: inline-block;
+}
+.projectTitle {
+    padding: 8px 12px;
+}
+
+.projectTitle h1 {
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--grey3);
+}
+
+.projectTitle h2 {
+    margin-top: 5px;
+    font-size: 18px;
+    color: white;
+}
+
+.projectContent {
+    background: var(--theme1);
+    display: flex;
+    border-radius: 15px;
 }
 
 .signup {

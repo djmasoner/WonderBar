@@ -5,10 +5,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="/path/to/infinite-scroll.pkgd.min.js"></script>
     <script src="/static/scripts/fetch_functions.js"></script>
     <script src="/static/scripts/api_calls.js"></script>
     <script src="/static/scripts/projects.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="/static/css/main.css" />
     <link rel="stylesheet" type="text/css" href="/static/css/projects.css" />
     <title>WonderBar - Projects</title>
@@ -25,7 +25,9 @@
             {% if session['user_type'] == 'teacher' %}
                     <a class="nav-link" href="/teachers">Teachers</a>
             {% endif %}
+            {% if session['logged_in'] %}
                     <a class="nav-link" href="/profile">Profile</a>
+            {% endif %}
                     <a class="nav-link" href="/about">About</a>
             {% if session['logged_in'] %}
                     <a class="nav-link" href="/logout">Logout</a>
@@ -40,23 +42,58 @@
 			<input hidden type="text" id="user_id" value="{{ session['user_id'] }}"></input>
 			<input hidden type="text" id="user_type" value="{{ session['user_type'] }}"></input>
 			<div id="background">
-				<img src="/static/images/mountian-background-1.jpg" alt="">
+                <img src="/static/images/forest-background-2.jpg" alt="">
 			</div>
-            <div class="project-buttons">
-                <div class="row">
-                    <div class="left-column">
-                        <a href="#">Find A Project</a>
-                    </div>
-            {% if session['user_type'] == 'teacher' %}
-                    <div class="right-column">
-                        <a href="/addProject">Make A Project</a>
-                    </div>
+            <div class="projects-border-outer">
+           {% if session['user_type'] == 'teacher' %}
+			<div class="project-buttons">
+            	<a href="/addProject">Create A Project</a>
+			</div>
             {% endif %}
+ 
+                <h1 id="projects-header">WonderBar Projects</h1>
+                    <button id="filter-button" type="button" class="collapsible">Filter Projects</button>
+                    <div class="project-filter row collapsible-content" id="filter-content">
+                        <div class="equal-column">
+                            <p>Topics:</p>
+                            <div class="filter-items" id="proj_topics">
+                            </div>
+                        </div>
+                        <div class="equal-column">
+                            <p>Locations:</p>
+                            <div class="filter-items" id="proj_locations">
+                            </div>
+                        </div>
+                        <div class="equal-column">
+                            <p>Materials:</p>
+                            <div class="filter-items" id="proj_material">
+                                <input type="checkbox" id="no-materials-needed" name="no-materials-needed" value="True">
+                                <label for="no-materials-needed">No materials needed</label><br>
+                            </div>
+                        </div>
+                        <div class="equal-column" id="proj_school">
+                            <p>School:</p>
+                            <div class="filter-items">
+                                <input type="checkbox" id="school-affiliation" name="school-affiliation" value="True">
+                                <label for="school-affiliation">Only my school's projects</label><br>
+                            </div>
+                        </div>
+            <div class="project-buttons">
+            	<a href="#" onclick="return filterProjects()">Filter</a>
+                <a href="#" onclick="return clearFilterSelections()">Clear Filter</a>
+
+
+                        </div>
+                        <span id="filter-error">No Projects Found. Update or clear filters.</span>
                 </div>
-            </div>
-            <div class="projects-header">
-                <h1 id="proj-header">Recent Projects</h1>
-            </div>
+                    <div class="tab">
+                        <button id="all-proj" class="tablinks active" onclick="filterProjectsTab(event, false)">All Projects</button>
+						{% if session['logged_in'] %}
+                        <button id="my-proj" class="tablinks" onclick="filterProjectsTab(event, true)">My Projects</button>
+						{% endif %}
+
+                    </div>
+                    <div class="sort-projects">
                 <select onchange="update_results()" name="results_number" id="results_number">
                   <option selected value="10">View 10</option>
                   <option value="25">View 25</option>
@@ -66,15 +103,18 @@
                 <select onchange="update_results()" name="order_by" id="order_by">
                   <option selected value="id%20DESC">Date (Newest to Oldest)</option>
                   <option value="id%20ASC ">Date (Oldest to Newest)</option>
-                  <option value="name%20DESC">Name A-Z</option>
-                  <option value="name%20ASC">Name Z-A</option>
+                  <option value="name%20ASC">Name A-Z</option>
+                  <option value="name%20DESC">Name Z-A</option>
                   <option value="creator_id%20ASC">Creator</option>
                 </select>
-            <div id="recent-project-list">
+                    </div>
+                    <div id="loader"></div>
+                    <div id="project-list">
 
             </div>
+                <!-- </div> -->
+            </div>
         </div>
-
         <footer id="footer">
             <ul id="footerList">
                 <li><p>Programmed by Monique Glasgow, Diana Masoner, and Sydney Walter</p></li>

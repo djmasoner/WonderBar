@@ -3,6 +3,8 @@ import logging
 import os
 from flask import Flask, render_template, request, Response, make_response, url_for, redirect, session
 import sqlalchemy
+import sendgrid
+from sendgrid.helpers.mail import Mail, Email, To, Content
 from requests_oauthlib import OAuth2Session
 import json
 from google.oauth2 import id_token
@@ -47,6 +49,9 @@ def logged_in():
             user_id = session['user_id']
             response = list_one('users', 'id', user_id)
             if response.status_code == 200:
+                # response = response.json()
+                # if 'user_type' not in session:
+                #     session['user_type'] = response["user_type"]
                 return True
             else:
                 end_session()
@@ -325,8 +330,8 @@ scope = ['https://www.googleapis.com/auth/userinfo.email', 'openid', 'https://ww
 def oauth():
     oauth = OAuth2Session(client_id, redirect_uri=redirect_uri, scope=scope)
 
-    # if logged_in():
-    #      return redirect(url_for('profile'))
+    if logged_in():
+         return redirect(url_for('profile'))
     authorization_url, state = oauth.authorization_url(
         'https://accounts.google.com/o/oauth2/auth',
         # access_type and prompt are Google specific extra
@@ -405,27 +410,27 @@ def login():
 
 @app.route("/profile", methods=["GET"])
 def profile():
-    # if logged_in():
-    #     return redirect(url_for('oauth'))
-    return render_template('profile.html')
+    if logged_in():
+        return render_template('profile.html')
+    return redirect(url_for('oauth'))
 
-@app.route("/addClass", methods=["GET"])
+@app.route("/myClasses", methods=["GET"])
 def addClass():
-    # if not logged_in():
-    #     return redirect(url_for('oauth'))
+    if not logged_in():
+        return redirect(url_for('oauth'))
     if 'user_type' in session:
         if session['user_type'] == 'teacher':
             return render_template('addClasses.html')
         else:
             return render_template('addClassesStudent.html')
-    # return redirect(url_for('oauth'))
-    return render_template('addClasses.html')
+    return redirect(url_for('oauth'))
+    # return render_template('addClasses.html')
 
 
 @app.route("/addProject", methods=["GET"])
 def addProject():
-    # if not logged_in():
-    #     return redirect(url_for('oauth'))
+    if not logged_in():
+        return redirect(url_for('oauth'))
     return render_template('createProject.html')
 
 @app.route("/projects", methods=["GET", "POST"])
@@ -438,14 +443,14 @@ def getProjects():
 
 @app.route("/projects/<project_id>", methods=["GET"])
 def getProject(project_id):
-    # if not logged_in():
-    #     return redirect(url_for('oauth'))
+    if not logged_in():
+        return redirect(url_for('oauth'))
     return render_template('indvproj.html')
 
 @app.route('/signup', methods = ['GET'])
 def signup():
-    # if logged_in():
-    #     return redirect(url_for('profile'))
+    if logged_in():
+        return redirect(url_for('profile'))
     if len(request.args)>0:
         params = json.loads(request.args['messages'])
         # print(params)
@@ -475,6 +480,8 @@ def about():
 
 @app.route("/<page_name>", methods=["GET"])
 def other_pages(page_name):
+    if not logged_in():
+        return redirect(url_for('oauth'))
     try: 
         return render_template(page_name + '.html')
     except:
@@ -489,6 +496,8 @@ def other_pages(page_name):
 
 @app.route("/<page_name>/<page_id>", methods=["GET"])
 def other_pages_specific(page_name, page_id):
+    if not logged_in():
+        return redirect(url_for('oauth'))
     try: 
         return render_template(page_name + '.html')
     except:
@@ -503,6 +512,8 @@ def other_pages_specific(page_name, page_id):
 
 @app.route("/viewObservations", methods=["GET"])
 def view_observations():
+    if not logged_in():
+        return redirect(url_for('oauth'))
     try: 
         return render_template('observations.html')
     except:
@@ -515,8 +526,53 @@ def view_observations():
         res.status_code = 404
         return res
 
+@app.route("/myObservations", methods=["GET"])
+def my_observations():
+    try: 
+        return render_template('my_obs.html')
+    except:
+        res = make_response(json.dumps({"Error":"Page does not exist"}))
+        res.mimetype = 'application/json'
+        res.headers.set('Access-Control-Allow-Origin', '*')
+        res.headers.set('Content-Type', 'application/json')
+        res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
+        res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
+        res.status_code = 404
+        return res
+@app.route("/viewObservation", methods=["GET"])
+def view_observation():
+    if not logged_in():
+        return redirect(url_for('oauth'))
+    try: 
+        return render_template('single_obs.html')
+    except:
+        res = make_response(json.dumps({"Error":"Page does not exist"}))
+        res.mimetype = 'application/json'
+        res.headers.set('Access-Control-Allow-Origin', '*')
+        res.headers.set('Content-Type', 'application/json')
+        res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
+        res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
+        res.status_code = 404
+        return res
+@app.route("/viewAllObservations", methods=["GET"])
+def view_all_observations():
+    if not logged_in():
+        return redirect(url_for('oauth'))
+    try: 
+        return render_template('all_obs.html')
+    except:
+        res = make_response(json.dumps({"Error":"Page does not exist"}))
+        res.mimetype = 'application/json'
+        res.headers.set('Access-Control-Allow-Origin', '*')
+        res.headers.set('Content-Type', 'application/json')
+        res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
+        res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
+        res.status_code = 404
+        return res
 @app.route("/addObservations", methods=["GET"])
 def add_observations():
+    if not logged_in():
+        return redirect(url_for('oauth'))
     try: 
         return render_template('prompts.html')
     except:
@@ -688,6 +744,275 @@ def delete_item(table_id):
         res.status_code = 404
         return res
     return delete_all(table_id)
+@app.route('/dbfilteredprojects/<user_id>', methods = ['GET'])
+def filtered_projects(user_id):
+    try:
+        q_limit = min(int(request.args.get('limit', '0')),MAX_LIMIT)
+    except:
+        q_limit = MAX_LIMIT
+    try:
+        q_offset = int(request.args.get('offset', '0'))
+    except:
+        q_offset = 0
+    q_order_by = (request.args.get('order_by', "id"))
+    locations = request.args.get('locations', "''")
+    topics = request.args.get('topics', "''")
+    materials = bool(request.args.get('material', 'False') == 'True')
+    school = bool(request.args.get('school', 'False') == 'True')
+    mine = bool(request.args.get('mine', 'False') == 'True')
+    if not mine:
+        stmt_mat_school_top_loc = """
+            SELECT p2.*, t.title , u2.first_name , u2.last_name, count(distinct m.id) as material_count
+            from projects p2 
+            inner join teachers t 
+            on t.user_id = p2.creator_id 
+            inner join users u2 
+            on u2.id = t.user_id 
+            left join project_locations pl
+            on pl.project_id = p2.id 
+            left join project_topics pt 
+            on pt.project_id = p2.id 
+            left join materials m 
+            on m.project_id = p2.id 
+            inner join 
+            (Select projects.* from projects where projects.creator_id in
+            (SELECT id from users where school = (
+            SELECT school from users 
+            where users.id = (
+                Select users.id from users 
+                where activation_code = (
+                    SELECT users.activation_code from users 
+                    where users.id=""" + user_id + """) 
+                and user_type ='teacher' limit 1)) 
+                order by id)) temp1
+            on temp1.id = p2.id
+            where (pl.location_id in (""" + locations + """)
+            or pt.topic_id in (""" + topics + """))
+            group by p2.id
+            having material_count = 0
+        """
+        stmt_school_top_loc = """
+            SELECT p2.*, t.title , u2.first_name , u2.last_name
+            from projects p2 
+            inner join teachers t 
+            on t.user_id = p2.creator_id 
+            inner join users u2 
+            on u2.id = t.user_id 
+            left join project_locations pl
+            on pl.project_id = p2.id 
+            left join project_topics pt 
+            on pt.project_id = p2.id 
+            inner join 
+            (Select projects.* from projects where projects.creator_id in
+            (SELECT id from users where school = (
+            SELECT school from users 
+            where users.id = (
+                Select users.id from users 
+                where activation_code = (
+                    SELECT users.activation_code from users 
+                    where users.id=""" + user_id + """) 
+                and user_type ='teacher' limit 1)) 
+                order by id)) temp1
+            on temp1.id = p2.id
+            where (pl.location_id in (""" + locations + """)
+            or pt.topic_id in (""" + topics + """))
+            group by p2.id
+        """
+        stmt_mat_top_loc = """
+            SELECT p2.*, t.title , u2.first_name , u2.last_name, count(distinct m.id) as material_count
+            from projects p2 
+            inner join teachers t 
+            on t.user_id = p2.creator_id 
+            inner join users u2 
+            on u2.id = t.user_id 
+            left join project_locations pl
+            on pl.project_id = p2.id 
+            left join project_topics pt 
+            on pt.project_id = p2.id 
+            left join materials m 
+            on m.project_id = p2.id 
+            where (pl.location_id in (""" + locations + """)
+            or pt.topic_id in (""" + topics + """))
+            group by p2.id
+            having material_count = 0
+        """
+        stmt_top_loc = """
+            SELECT p2.*, t.title , u2.first_name , u2.last_name
+            from projects p2 
+            inner join teachers t 
+            on t.user_id = p2.creator_id 
+            inner join users u2 
+            on u2.id = t.user_id 
+            left join project_locations pl
+            on pl.project_id = p2.id 
+            left join project_topics pt 
+            on pt.project_id = p2.id 
+            where (pl.location_id in (""" + locations + """)
+            or pt.topic_id in (""" + topics + """))
+            group by p2.id
+        """
+    else:
+        stmt_mat_school_top_loc = """
+            SELECT p2.*, t.title , u2.first_name , u2.last_name, count(distinct m.id) as material_count
+            from projects p2 
+            inner join teachers t 
+            on t.user_id = p2.creator_id 
+            inner join users u2 
+            on u2.id = t.user_id 
+            inner join project_users pu 
+            on pu.project_id = p2.id
+            left join project_locations pl
+            on pl.project_id = p2.id 
+            left join project_topics pt 
+            on pt.project_id = p2.id 
+            left join materials m 
+            on m.project_id = p2.id 
+            inner join 
+            (Select projects.* from projects where projects.creator_id in
+            (SELECT id from users where school = (
+            SELECT school from users 
+            where users.id = (
+                Select users.id from users 
+                where activation_code = (
+                    SELECT users.activation_code from users 
+                    where users.id=""" + user_id + """) 
+                and user_type ='teacher' limit 1)) 
+                order by id)) temp1
+            on temp1.id = p2.id
+            where (pl.location_id in (""" + locations + """)
+            or pt.topic_id in (""" + topics + """))
+            and pu.user_id=""" + user_id + """
+            group by p2.id
+            having material_count = 0
+        """
+        stmt_school_top_loc = """
+            SELECT p2.*, t.title , u2.first_name , u2.last_name
+            from projects p2 
+            inner join teachers t 
+            on t.user_id = p2.creator_id 
+            inner join users u2 
+            on u2.id = t.user_id 
+            inner join project_users pu 
+            on pu.project_id = p2.id
+            left join project_locations pl
+            on pl.project_id = p2.id 
+            left join project_topics pt 
+            on pt.project_id = p2.id 
+            inner join 
+            (Select projects.* from projects where projects.creator_id in
+            (SELECT id from users where school = (
+            SELECT school from users 
+            where users.id = (
+                Select users.id from users 
+                where activation_code = (
+                    SELECT users.activation_code from users 
+                    where users.id=""" + user_id + """) 
+                and user_type ='teacher' limit 1)) 
+                order by id)) temp1
+            on temp1.id = p2.id
+            where (pl.location_id in (""" + locations + """)
+            or pt.topic_id in (""" + topics + """))
+            and pu.user_id=""" + user_id + """
+            group by p2.id
+        """
+        stmt_mat_top_loc = """
+            SELECT p2.*, t.title , u2.first_name , u2.last_name, count(distinct m.id) as material_count
+            from projects p2 
+            inner join teachers t 
+            on t.user_id = p2.creator_id 
+            inner join users u2 
+            on u2.id = t.user_id 
+            inner join project_users pu 
+            on pu.project_id = p2.id
+            left join project_locations pl
+            on pl.project_id = p2.id 
+            left join project_topics pt 
+            on pt.project_id = p2.id 
+            left join materials m 
+            on m.project_id = p2.id 
+            where (pl.location_id in (""" + locations + """)
+            or pt.topic_id in (""" + topics + """))
+            and pu.user_id=""" + user_id + """
+            group by p2.id
+            having material_count = 0
+        """
+        stmt_top_loc = """
+            SELECT p2.*, t.title , u2.first_name , u2.last_name
+            from projects p2 
+            inner join teachers t 
+            on t.user_id = p2.creator_id 
+            inner join project_users pu 
+            on pu.project_id = p2.id
+            inner join users u2 
+            on u2.id = t.user_id 
+            left join project_locations pl
+            on pl.project_id = p2.id 
+            left join project_topics pt 
+            on pt.project_id = p2.id 
+            where (pl.location_id in (""" + locations + """)
+            or pt.topic_id in (""" + topics + """))
+            and pu.user_id=""" + user_id + """
+            group by p2.id
+        """
+    if materials == False and school == False:
+        stmt = stmt_top_loc
+    elif materials == False and school == True:
+        stmt = stmt_school_top_loc
+    elif materials == True and school == False:
+        stmt = stmt_mat_top_loc
+    else:
+        stmt = stmt_mat_school_top_loc
+    try:
+        with db.connect() as conn:
+            count = conn.execute("SELECT COUNT(*) FROM (" + stmt + ") temp_table") 
+            id_count =0
+            for v in count:
+                for column, value in v.items():
+                        id_count = value
+            if q_limit == 0:
+                projects = conn.execute(
+                   stmt + " order by " + q_order_by
+                ).fetchall()
+            else:
+                projects = conn.execute(
+                   stmt + " order by " + q_order_by + " limit %s offset %s", q_limit, q_offset
+                ).fetchall()
+        results = []
+        for v in projects:
+            project ={}
+            for column, value in v.items():
+                project[column] = format_values(value)
+            # project = createLinks(project, table_name, str(v[constants.table_pks[table_name]]))
+            results.append(project)
+        if len(results) < q_limit or q_limit==0:
+            next_set = None
+        else:
+            next_set = (constants.app_url  + "dbfilteredprojects/" + user_id + "?locations=" + locations + "&topics=" + topics + "&materials=" + str(materials) + "&school=" + str(school)  + "&order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset + q_limit))
+        if q_offset == 0:
+            prev_set = None
+        else:
+            prev_set = (constants.app_url  + "dbfilteredprojects/" + user_id + "?locations=" + locations + "&topics=" + topics + "&materials=" + str(materials) + "&school=" + str(school) + "&order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset - q_limit))
+        all_projects=dict({"count":id_count, 
+                            "prev": prev_set, 
+                            "next": next_set, 
+                            "limit": q_limit,
+                            "offset": q_offset,
+                            "results":results})
+    except Exception as e:
+        logger.exception(e)
+        return Response(
+            status=500,
+            response="Unable to successfully cast vote! Please check the "
+            "application logs for more details. '{}'".format(e),
+        )
+    res = make_response(json.dumps(all_projects))
+    res.mimetype = 'application/json'
+    res.headers.set('Access-Control-Allow-Origin', '*')
+    res.headers.set('Content-Type', 'application/json')
+    res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
+    res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
+    res.status_code = 200
+    return res
 
 
 @app.route('/dbusers/<project_id>/dbschoolclasses')
@@ -811,6 +1136,75 @@ def delete_items(table_id, project_id):
         res.status_code = 404
         return res
     return delete_one(table_id, constants.table_pks[table_id], project_id)
+
+
+
+
+@app.route('/dbobservations/<prompt_id>/stats', methods = ['GET'])
+def obs_stats(prompt_id):
+    if request.method == 'OPTIONS':
+        res = make_response(json.dumps({"Success":"Success"}))
+        res.mimetype = 'application/json'
+        res.headers.set('Access-Control-Allow-Origin', '*')
+        res.headers.set('Content-Type', 'application/json')
+        res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
+        res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
+        res.status_code = 204
+        return res
+
+    stmt = """
+        SELECT AVG(response) as avg, 
+        MIN(response) as min, 
+        MAX(response) as max, 
+        SUM(response) as sum
+        FROM observations
+        INNER JOIN prompts
+        ON observations.prompt_id = prompts.id
+        WHERE prompts.id=""" + prompt_id + """
+        GROUP by prompt_id;
+    """
+    # stmt = create_select(constants.table_fks[table1_id+"_"+table2_id][0]) + " WHERE " + constants.table_fks[table1_id+"_"+table2_id][2] + "=%s AND " + constants.table_fks[table1_id+"_"+table2_id][1] + "=%s"
+    # query database
+    try:
+        with db.connect() as conn:
+
+            projects = conn.execute(stmt).fetchall()
+
+        results = []
+        for v in projects:
+            project ={}
+            for column, value in v.items():
+                project[column] = format_values(value)
+            # project = createLinks(project, table2_id, str(v[constants.table_pks[table2_id]]))
+            results.append(project)
+
+        all_projects=dict({"count": None, 
+                            "prev": None, 
+                            "next": None, 
+                            "limit": None,
+                            "offset": None,
+                            "results":results})
+
+
+    except Exception as e:
+        logger.exception(e)
+        return Response(
+            status=500,
+            response="Unable to successfully cast vote! Please check the "
+            "application logs for more details. '{}'".format(e),
+        )
+
+
+    res = make_response(json.dumps(all_projects))
+    res.mimetype = 'application/json'
+    res.headers.set('Access-Control-Allow-Origin', '*')
+    res.headers.set('Content-Type', 'application/json')
+    res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
+    res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
+    res.status_code = 200
+    return res
+
+
 
 
 @app.route('/dbprojects/<project_id1>/dbusers/<project_id2>', methods = ['GET','OPTIONS'])
@@ -1072,7 +1466,79 @@ def get_other_table_count(table1_id, project_id, table2_id):
         res.status_code = 200
         return res
 
+@app.route('/dbprompts/<prompt_id>/count', methods = ['GET', 'OPTIONS'])
+def get_top_contributors(prompt_id):
 
+    try:
+        q_limit = min(int(request.args.get('limit', '0')),MAX_LIMIT)
+    except:
+        q_limit = MAX_LIMIT
+    try:
+        q_offset = int(request.args.get('offset', '0'))
+    except:
+        q_offset = 0
+    q_order_by = (request.args.get('order_by', "id"))
+    stmt = """
+        select COUNT(o.user_id) as obs_count, u2.* from observations o 
+        inner join prompts p 
+        on p.id = o.prompt_id 
+        inner join users u2 
+        on u2.id = o.user_id 
+        where o.prompt_id = """ + prompt_id + """
+        group by u2.id
+        order by obs_count DESC
+        limit 5
+        """
+    try:
+        with db.connect() as conn:
+            count = conn.execute("SELECT COUNT(*) FROM (" + stmt + ") temp_table") 
+            id_count =0
+            for v in count:
+                for column, value in v.items():
+                        id_count = value
+            if q_limit == 0:
+                projects = conn.execute(
+                   stmt
+                ).fetchall()
+            else:
+                projects = conn.execute(
+                   stmt + " order by " + q_order_by + " limit %s offset %s", q_limit, q_offset
+                ).fetchall()
+        results = []
+        for v in projects:
+            project ={}
+            for column, value in v.items():
+                project[column] = format_values(value)
+            results.append(project)
+        if len(results) < q_limit or q_limit==0:
+            next_set = None
+        else:
+            next_set = None
+        if q_offset == 0:
+            prev_set = None
+        else:
+            prev_set = None
+        all_projects=dict({"count":id_count, 
+                            "prev": prev_set, 
+                            "next": next_set, 
+                            "limit": q_limit,
+                            "offset": q_offset,
+                            "results":results})
+    except Exception as e:
+        logger.exception(e)
+        return Response(
+            status=500,
+            response="Unable to successfully cast vote! Please check the "
+            "application logs for more details. '{}'".format(e),
+        )
+    res = make_response(json.dumps(all_projects))
+    res.mimetype = 'application/json'
+    res.headers.set('Access-Control-Allow-Origin', '*')
+    res.headers.set('Content-Type', 'application/json')
+    res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
+    res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
+    res.status_code = 200
+    return res
 @app.route('/db<table1_id>/<project_id>/db<table2_id>', methods = ['GET', 'OPTIONS'])
 def get_other_table(table1_id, project_id, table2_id):
 #    if "Authorization" not in request.headers:
@@ -1129,7 +1595,7 @@ def get_other_table(table1_id, project_id, table2_id):
                     ).fetchall()
                 else:
                     projects = conn.execute(
-                       stmt + " order by " + q_order_by + " limit %s offset %s", specific_id, q_limit, q_offset
+                       stmt + " order by " + q_order_by + " limit %s offset %s", project_id, q_limit, q_offset
                     ).fetchall()
 
             results = []
@@ -1143,12 +1609,12 @@ def get_other_table(table1_id, project_id, table2_id):
             if len(results) < q_limit or q_limit==0:
                 next_set = None
             else:
-                next_set = (constants.app_url  + 'db' + table1_id + "/" + project_id + "/prompts"  + "?" + "order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset + q_limit))
+                next_set = (constants.app_url  + 'db' + table1_id + "/" + project_id + "/dbprompts"  + "?" + "order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset + q_limit))
 
             if q_offset == 0:
                 prev_set = None
             else:
-                prev_set = (constants.app_url  + 'db' + table1_id + "/" + project_id + "/prompts"  + "?" + "order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset - q_limit))
+                prev_set = (constants.app_url  + 'db' + table1_id + "/" + project_id + "/dbprompts"  + "?" + "order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset - q_limit))
 
             all_projects=dict({"count":id_count, 
                                 "prev": prev_set, 
@@ -1167,6 +1633,73 @@ def get_other_table(table1_id, project_id, table2_id):
             )
 
 
+        res = make_response(json.dumps(all_projects))
+        res.mimetype = 'application/json'
+        res.headers.set('Access-Control-Allow-Origin', '*')
+        res.headers.set('Content-Type', 'application/json')
+        res.headers.set('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE, OPTIONS')
+        res.headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin')
+        res.status_code = 200
+        return res
+    elif table2_id == "projects" and table1_id == "users":
+        try:
+            q_limit = min(int(request.args.get('limit', '0')),MAX_LIMIT)
+        except:
+            q_limit = MAX_LIMIT
+        try:
+            q_offset = int(request.args.get('offset', '0'))
+        except:
+            q_offset = 0
+        q_order_by = (request.args.get('order_by', constants.table_pks["prompts"]))
+        stmt = """SELECT project_users.date_joined, projects.*, users.first_name, users.last_name, teachers.title 
+        FROM project_users 
+        inner join projects on projects.id = project_users.project_id
+        inner join users on users.id = project_users.user_id
+        left join teachers on users.id = teachers.user_id
+        WHERE project_users.user_id=%s"""
+        try:
+            with db.connect() as conn:
+                count = conn.execute("SELECT COUNT(*) FROM project_users WHERE project_users.user_id=%s", project_id)
+                id_count =0
+                for v in count:
+                    for column, value in v.items():
+                            id_count = value
+                if q_limit == 0:
+                    projects = conn.execute(
+                       stmt + " order by " + q_order_by, project_id
+                    ).fetchall()
+                else:
+                    projects = conn.execute(
+                       stmt + " order by " + q_order_by + " limit %s offset %s", project_id, q_limit, q_offset
+                    ).fetchall()
+            results = []
+            for v in projects:
+                project ={}
+                for column, value in v.items():
+                    project[column] = format_values(value)
+                project = createLinks(project, table2_id, str(v[constants.table_pks[table2_id]]))
+                results.append(project)
+            if len(results) < q_limit or q_limit==0:
+                next_set = None
+            else:
+                next_set = (constants.app_url  + 'db' + table1_id + "/" + project_id + "/dbprojects"  + "?" + "order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset + q_limit))
+            if q_offset == 0:
+                prev_set = None
+            else:
+                prev_set = (constants.app_url  + 'db' + table1_id + "/" + project_id + "/dbprojects"  + "?" + "order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset - q_limit))
+            all_projects=dict({"count":id_count, 
+                                "prev": prev_set, 
+                                "next": next_set, 
+                                "limit": q_limit,
+                                "offset": q_offset,
+                                "results":results})
+        except Exception as e:
+            logger.exception(e)
+            return Response(
+                status=500,
+                response="Unable to successfully cast vote! Please check the "
+                "application logs for more details. '{}'".format(e),
+            )
         res = make_response(json.dumps(all_projects))
         res.mimetype = 'application/json'
         res.headers.set('Access-Control-Allow-Origin', '*')
@@ -1211,7 +1744,7 @@ def get_other_table(table1_id, project_id, table2_id):
                     ).fetchall()
                 else:
                     projects = conn.execute(
-                       stmt + " order by " + q_order_by + " limit %s offset %s", specific_id, q_limit, q_offset
+                       stmt + " order by " + q_order_by + " limit %s offset %s", project_id, q_limit, q_offset
                     ).fetchall()
 
             results = []
@@ -1225,12 +1758,12 @@ def get_other_table(table1_id, project_id, table2_id):
             if len(results) < q_limit or q_limit==0:
                 next_set = None
             else:
-                next_set = (constants.app_url  + 'db' + table1_id + "/" + project_id + "/prompts"  + "?" + "order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset + q_limit))
+                next_set = (constants.app_url  + 'db' + table1_id + "/" + project_id + "/dbclasses"  + "?" + "order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset + q_limit))
 
             if q_offset == 0:
                 prev_set = None
             else:
-                prev_set = (constants.app_url  + 'db' + table1_id + "/" + project_id + "/prompts"  + "?" + "order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset - q_limit))
+                prev_set = (constants.app_url  + 'db' + table1_id + "/" + project_id + "/dbclasses"  + "?" + "order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset - q_limit))
 
             all_projects=dict({"count":id_count, 
                                 "prev": prev_set, 
@@ -1326,12 +1859,12 @@ def get_other_table(table1_id, project_id, table2_id):
             if len(results) < q_limit or q_limit==0:
                 next_set = None
             else:
-                next_set = (constants.app_url  + 'db' + table1_id + "/" + project_id + "/prompts"  + "?" + "order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset + q_limit))
+                next_set = (constants.app_url  + 'db' + table1_id + "/" + project_id + "/dbobservations"  + "?" + "order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset + q_limit))
 
             if q_offset == 0:
                 prev_set = None
             else:
-                prev_set = (constants.app_url  + 'db' + table1_id + "/" + project_id + "/prompts"  + "?" + "order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset - q_limit))
+                prev_set = (constants.app_url  + 'db' + table1_id + "/" + project_id + "/dbobservations"  + "?" + "order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset - q_limit))
 
             all_projects=dict({"count":id_count, 
                                 "prev": prev_set, 
@@ -1467,22 +2000,31 @@ def get_other_table(table1_id, project_id, table2_id):
             q_offset = 0
 
         #get order by column or use default
-        q_order_by = (request.args.get('order_by', constants.table_pks["classes"]))
+        q_order_by = (request.args.get('order_by', 'observations.id'))
 
 
 
-        stmt = """SELECT projects.name, prompts.subheading, prompts.description, observations.* 
+        stmt = """SELECT projects.id as project_id, 
+        response_types.name ,
+        observations.id , 
+        observations.user_id , 
+        observations.prompt_id , 
+        projects.name as 'Project Name', 
+        prompts.subheading as 'Prompt Name', 
+        prompts.description as 'Prompt Description',
+        observations.time_observed as 'Date Added',
+        observations.response as 'Response',
+        observations.additional_notes as 'Comments'
         FROM observations
         INNER JOIN prompts
         ON observations.prompt_id = prompts.id
+        INNER JOIN response_types
+        ON response_types.id = prompts.response_type_id 
         INNER JOIN projects
         ON prompts.project_id = projects.id
-        INNER JOIN project_users
-        ON project_users.project_id = projects.id
-        INNER JOIN users
-        ON users.id = project_users.user_id
-        WHERE users.id = %s"""
-        # print(stmt)
+        WHERE observations.user_id = %s
+        order by projects.id, prompts.id, observations.id
+        """
 
         # query database
         try:
@@ -1490,23 +2032,15 @@ def get_other_table(table1_id, project_id, table2_id):
 
                 count = conn.execute("SELECT COUNT(*)" + """ 
                     FROM observations
-                    INNER JOIN prompts
-                    ON observations.prompt_id = prompts.id
-                    INNER JOIN projects
-                    ON prompts.project_id = projects.id
-                    INNER JOIN project_users
-                    ON project_users.project_id = projects.id
-                    INNER JOIN users
-                    ON users.id = project_users.user_id
-                    WHERE users.id = %s""", project_id)
+                    WHERE observations.user_id = %s""", project_id)
                 id_count =0
                 for v in count:
                     for column, value in v.items():
                             id_count = value
                 if q_limit == 0:
-                    projects = conn.execute(stmt + " order by observations.id", project_id).fetchall()
+                    projects = conn.execute(stmt, project_id).fetchall()
                 else:
-                    projects = conn.execute(stmt + " order by observations.id" + " limit %s offset %s", project_id, q_limit, q_offset).fetchall()
+                    projects = conn.execute(stmt + " limit %s offset %s", project_id, q_limit, q_offset).fetchall()
 
 
             results = []
@@ -1607,12 +2141,12 @@ def get_other_table(table1_id, project_id, table2_id):
             if len(results) < q_limit or q_limit==0:
                 next_set = None
             else:
-                next_set = (constants.app_url  + 'db' + table1_id + "/" + project_id + "/prompts"  + "?" + "order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset + q_limit))
+                next_set = (constants.app_url  + 'db' + table1_id + "/" + project_id + "/dbmultientry_items"  + "?" + "order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset + q_limit))
 
             if q_offset == 0:
                 prev_set = None
             else:
-                prev_set = (constants.app_url  + 'db' + table1_id + "/" + project_id + "/prompts"  + "?" + "order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset - q_limit))
+                prev_set = (constants.app_url  + 'db' + table1_id + "/" + project_id + "/dbmultientry_items"  + "?" + "order_by=" + q_order_by + "&limit=" + str(q_limit) + "&offset=" + str(q_offset - q_limit))
 
             all_projects=dict({"count":id_count, 
                                 "prev": prev_set, 
@@ -2052,7 +2586,7 @@ def delete_all(table_name):
         )
 
 
-    res = make_response(json.dumps(''))
+    res = make_response(json.dumps({"Success":"Success"}))
     res.mimetype = 'application/json'
     res.headers.set('Access-Control-Allow-Origin', '*')
     res.headers.set('Content-Type', 'application/json')
@@ -2081,7 +2615,7 @@ def delete_one(table_name, table_pk, key_val):
         )
 
 
-    res = make_response(json.dumps(''))
+    res = make_response(json.dumps({"Success":"Success"}))
     res.mimetype = 'application/json'
     res.headers.set('Access-Control-Allow-Origin', '*')
     res.headers.set('Content-Type', 'application/json')
@@ -2110,7 +2644,7 @@ def delete_one_join(table1_name, table1_pk, table2_name, table2_pk):
         )
 
 
-    res = make_response(json.dumps(''))
+    res = make_response(json.dumps({"Success":"Success"}))
     res.mimetype = 'application/json'
     res.headers.set('Access-Control-Allow-Origin', '*')
     res.headers.set('Content-Type', 'application/json')
@@ -2138,7 +2672,7 @@ def delete_all_specific(table1_name, table1_pk, table2_name):
         )
 
 
-    res = make_response(json.dumps(''))
+    res = make_response(json.dumps({"Success":"Success"}))
     res.mimetype = 'application/json'
     res.headers.set('Access-Control-Allow-Origin', '*')
     res.headers.set('Content-Type', 'application/json')
@@ -2169,8 +2703,6 @@ def insert_item(table_name, table_pk, auto_inc=True, valuesDict={}):
         if table_name != "users":
             error_list = verify_contents(content, constants.table_attributes[table_name], constants.table_attributes_optional[table_name])
             if error_list:
-                logger.exception(content)
-                logger.exception(", ".join(error_list))
 
                 return Response(
                     status=400,
@@ -2258,7 +2790,7 @@ def insert_item(table_name, table_pk, auto_inc=True, valuesDict={}):
             try:
                 with db.connect() as conn:
                     projects = conn.execute(
-                       sel
+                       stmt
                     )
                 print(projects.rowcount)
                 project ={}
@@ -2361,14 +2893,45 @@ def worknow():
         session["user_id"] = json.loads(response.data)["id"]
         session["user_type"] = json.loads(response.data)["user_type"]
         # print (session["user_id"])
+        sendemail(valuesDict["email_address"], valuesDict["activation_code"], valuesDict["first_name"])
+        messages = {"first_name": valuesDict["first_name"], "activation_code": json.loads(response.data)["activation_code"], "email": valuesDict["email_address"]}
 
-        return redirect(url_for('addClass'))
+        # return redirect(url_for('signup', messages=messages))
+        return render_template('accountCreated.html',  first_name = messages["first_name"], activation_code=messages["activation_code"],email=messages["email"])
+        # return redirect(url_for('signup', messages=messages))
     else:
          return redirect(url_for('oauth'))
     # return Response(
     #     status=200,
     #     response="User successfully added '{}' at time!".format(valuesDict["username"]),
     # )
+
+
+# @app.route('/email/signup', methods = ['GET'])
+def sendemail(email, activation_code, first_name):
+    message = """Hi """ + first_name +  """,
+    \nAt WonderBar, you can explore new projects, or add your own, while contributing to a shared database of information that facilitates learning and discovery.
+    \n\nCome on in and start exploring!
+    \n\nYour activation code: """ + activation_code + """
+    \n\nYour students will need this code to sign up (https://wonderbar-cs467.ue.r.appspot.com/signup) and start participating!
+    \n\n- The WonderBar Team
+    """
+
+
+    sg = sendgrid.SendGridAPIClient(api_key=secrets.access_secret_version(request={"name": "projects/wonderbar-cs467/secrets/SendGrid/versions/1"}).payload.data.decode("utf-8"))
+    from_email = Email("WonderBar.CS467@gmail.com")  # Change to your verified sender
+    to_email = To(email)  # Change to your recipient
+    subject = "Welcome to WonderBar!"
+    content = Content("text/plain", message)
+    mail = Mail(from_email, to_email, subject, content)
+
+    # Get a JSON-ready representation of the Mail object
+    mail_json = mail.get()
+
+    # Send an HTTP POST request to /mail/send
+    response = sg.client.mail.send.post(request_body=mail_json)
+
+
 
 
 

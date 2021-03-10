@@ -1,14 +1,24 @@
-var map;
-         var marker = null;
+        var map;
+        var marker = null;
+        var pos;
 
-         if (navigator.geolocation) {
-             navigator.geolocation.getCurrentPosition(position => {
-                 pos = {
-                     lat: position.coords.latitude,
-                     lng: position.coords.longitude
-                 }
-             })
+
+
+        function getLocation() {
+           if (navigator.geolocation) {
+               navigator.geolocation.getCurrentPosition(position => {
+                   pos = {
+                       lat: position.coords.latitude,
+                       lng: position.coords.longitude
+                   }
+
+                   initialize();
+               })
+           }
+           return pos;
          }
+
+
          function initialize() {
              var mapOptions = {
                  zoom: 15,
@@ -16,6 +26,8 @@ var map;
                  center: new google.maps.LatLng(pos), //center on sherbrooke
                  mapTypeId: google.maps.MapTypeId.ROADMAP
              };
+
+             $("#coordinate").val(pos.lat + ", " + pos.lng);
 
              map = new google.maps.Map(document.getElementById('map'), mapOptions);
 
@@ -32,4 +44,4 @@ var map;
              });
 
          }
-         google.maps.event.addDomListener(window, 'load', initialize);
+         google.maps.event.addDomListener(window, 'load', getLocation);

@@ -135,8 +135,26 @@ margin-top: 6px;
   clear: both;
 }
 
+.success-message, .error-message {
+  font-size: 14px;
+  margin-bottom: 1rem;
+  display: block;
+}
+.success-message:before {
+  content: '\2705';
+}
+
+.error-message:before {
+  content: '\274C';
+}
+
+input.invalid, textarea.invalid, label.invalid, p.invalid, select.invalid {
+  background-color: #ffdddd;
+}
+
+
 #added-classes-table, #available-classes-table {
-    display: inline-block;
+    /*display: inline-block;*/
     border-collapse: collapse;
     margin: 25px 10px;
     padding-top: 12px;
@@ -156,6 +174,7 @@ margin-top: 6px;
     background-color: var(--grey2);
 	color: #ffffff;
 	text-align: center;
+  display: block;
 }
 
 #added-classes-table th,
@@ -168,6 +187,13 @@ margin-top: 6px;
 #added-classes-table tbody tr,
 #available-classes-table tbody tr  {
 	border-bottom: 1px solid #dddddd;
+}
+
+#added-classes-table tbody,
+#available-classes-table tbody {
+ display: block;
+ overflow-y: scroll;
+ max-height: 40vh;
 }
 
 #added-classes-table tbody tr:nth-of-type(even),
@@ -192,13 +218,43 @@ margin-top: 6px;
 	margin: 0;
 }
 
+#added-classes-table tbody tr:nth-of-type(even):hover,
+#available-classes-table tbody tr:nth-of-type(even):hover {
+    background-color: var(--theme2);
+    cursor: pointer;
+
+}
+
+#added-classes-table tbody tr:nth-of-type(odd):hover,
+#available-classes-table tbody tr:nth-of-type(odd):hover {
+    background-color: var(--theme2);
+    cursor: pointer;
+
+}
+
+td:nth-child(1), th:nth-child(1) {
+  width: 2%;
+}
+td:nth-child(2), th:nth-child(2) {
+  width: 28%;
+}
+td:nth-child(3), th:nth-child(3) {
+  width: 50%;
+}
+td:nth-child(4), th:nth-child(4) {
+  width: 30%;
+}
 
 /* Style the button that is used to open and close the collapsible content */
 
-.collapsible, .active-collapsible {
+.collapsible {
+  cursor: pointer;
+}
+
+
+#added-classes-div .collapsible, #added-classes-div .active-collapsible {
 	background-color: var(--theme4);
 	color: white;
-	cursor: pointer;
 	padding: 18px;
 	width: 100%;
 	border: none;
@@ -208,7 +264,7 @@ margin-top: 6px;
 	position: relative;
 }
 
-.collapsible p, .active-collapsible p{
+#added-classes-div .collapsible p, #added-classes-div .active-collapsible p{
 	margin: 0 5%;
 }
 
@@ -234,10 +290,14 @@ margin-top: 6px;
 
 
 .collapsible:hover {
+  background-color: var(--theme2);
+}
+
+#added-classes-div .collapsible:hover {
 	background-color: var(--grey2);
 }
 
-.active-collapsible:hover {
+#added-classes-div .active-collapsible:hover {
 	background-color: var(--theme4);
 }
 
@@ -248,6 +308,8 @@ margin-top: 6px;
   margin-left: 5px;
   padding-right: 2%;
 }
+
+
 
 .collapsible:before {
   content: '\002B';
@@ -260,12 +322,37 @@ margin-top: 6px;
 /* Style the collapsible content. Note: hidden by default */
 
 .collapsible-content {
+  padding: 0;
+  display: none;
+}
+
+#added-classes-div .collapsible-content {
 	padding: 0 18px;
 	display: none;
 	overflow: hidden;
 	background-color: #f1f1f1;
 }
 
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 1px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: var(--grey1); 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: var(--theme5); 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: var(--grey3); 
+}
 
 
 /* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */

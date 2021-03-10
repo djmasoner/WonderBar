@@ -7,8 +7,12 @@ const statusCheck = response => {
 
 const json = response => response.json()
 
+var today = new Date();
+var dd = String(today.getDate()).padStart(2, '0');
+var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+var yyyy = today.getFullYear();
 
-
+var date = mm + '/' + dd + '/' + yyyy;
 function yesnoCheck() {
 
     var i;
@@ -47,6 +51,8 @@ function yesnoCheck() {
     for (i = 0; i < student_teacher_fields.length; i++) {
       student_teacher_fields[i].style.display = "block";
     }
+document.getElementById('birthdate').max = date;
+
 }
 
 function confirm() {

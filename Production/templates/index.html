@@ -20,7 +20,9 @@
             {% if session['user_type'] == 'teacher' %}
                     <a class="nav-link" href="/teachers">Teachers</a>
             {% endif %}
+            {% if session['logged_in'] %}
                     <a class="nav-link" href="/profile">Profile</a>
+            {% endif %}
                     <a class="nav-link" href="/about">About</a>
 
             {% if session['logged_in'] %}
@@ -53,7 +55,11 @@
                             database of information that facilitates learning and discovery.
                             Come on in and start exploring!
                         </p>
+             {% if session['logged_in'] %}
+                       <a href="/profile" class="get-started-btn">My Profile</a>
+             {% else %}
                         <a href="/oauth" class="get-started-btn">Get Started</a>
+             {% endif %}
                     </div>
                 </div>
             </div>

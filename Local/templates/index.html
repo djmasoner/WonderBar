@@ -53,8 +53,12 @@
                             database of information that facilitates learning and discovery.
                             Come on in and start exploring!
                         </p>
-                        <a href="/oauth" class="get-started-btn">Get Started</a>
-                    </div>
+            <!-- {% if session['logged_in'] %} -->
+                       <a href="/profile" class="get-started-btn">My Profile</a>
+             <!-- {% else %} -->
+                       <a href="/oauth" class="get-started-btn">Get Started</a>
+             <!-- {% endif %} -->
+                   </div>
                 </div>
             </div>
         </div>
