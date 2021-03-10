@@ -8,6 +8,8 @@
 		<link rel="stylesheet" type="text/css" href="/static/css/addClasses.css" />
 		<link rel="stylesheet" type="text/css" href="/static/css/addClassesStudent.css" />
 		<title>WonderBar - View/Add Classes</title>
+		<script src="/static/scripts/fetch_functions.js"></script>
+		<script src="/static/scripts/api_calls.js"></script>
 		<script src="/static/scripts/addClassesStudent.js"></script>
 
 	</head>
@@ -22,7 +24,9 @@
 						{% if session['user_type'] == 'teacher' %}
 						<a class="nav-link" href="/teachers">Teachers</a>
 						{% endif %}
+            {% if session['logged_in'] %}
 						<a class="nav-link" href="/profile">Profile</a>
+            {% endif %}
 						<a class="nav-link" href="/about">About</a>
 						{% if session['logged_in'] %}
 						<a class="nav-link" href="/logout">Logout</a>
@@ -37,11 +41,11 @@
 	                <img src="/static/images/forest-background-2.jpg" alt="">
 	            </div>
 				<div class="classes">
-		            <div class="classTitle">
+		            <div class="classTitle collapsible" id="wb_class0" onclick="javascript: showCollapsible(0);">
 						<h1>Available Classes</h1>
-						<h2>Add Class</h2>
+						<h2>Click to expand and add classes</h2>
 					</div>
-		            <div class="classContent">
+		            <div class="classContent collapsible-content">
 						<div id="available-classes-div">
 							<input type="text" id="myInput" onkeyup="myFunction('myInput', 'available-classes-table')" placeholder="Search for class...">
 							<table id="available-classes-table">

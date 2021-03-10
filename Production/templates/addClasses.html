@@ -7,6 +7,8 @@
 		<link rel="stylesheet" type="text/css" href="/static/css/main.css" />
 		<link rel="stylesheet" type="text/css" href="/static/css/addClasses.css" />
 		<title>WonderBar - View/Add Classes</title>
+		<script src="/static/scripts/fetch_functions.js"></script>
+		<script src="/static/scripts/api_calls.js"></script>
 		<script src="/static/scripts/addClasses.js"></script>
 
 	</head>
@@ -21,7 +23,9 @@
 						{% if session['user_type'] == 'teacher' %}
 						<a class="nav-link" href="/teachers">Teachers</a>
 						{% endif %}
+            {% if session['logged_in'] %}
 						<a class="nav-link" href="/profile">Profile</a>
+            {% endif %}
 						<a class="nav-link" href="/about">About</a>
 						{% if session['logged_in'] %}
 						<a class="nav-link" href="/logout">Logout</a>
@@ -47,7 +51,8 @@
 										<label for="class_code">Class Code</label>
 									</div>
 									<div class="right-column">
-										<input placeholder="Enter class code..."  type="text" name="class_code" id="class_code">
+										<p><input required placeholder="Enter class code..."  type="text" name="class_code" id="class_code" maxlength="10" minlength="1" onfocusout="verifyTextData(this)"></p>
+										<span><span>
 									</div>
 								</div>
 								<div class="row">
@@ -55,7 +60,8 @@
 										<label for="class_name">Class Name</label>
 									</div>
 									<div class="right-column">
-										<input placeholder="Enter class name..." type="text" name="class_name" id="class_name">
+										<p><input required placeholder="Enter class name..." type="text" name="class_name" id="class_name" maxlength="50" minlength="5" onfocusout="verifyTextData(this)"></p>
+										<span><span>
 									</div>
 								</div>
 								<div class="row">

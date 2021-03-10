@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="/static/css/main.css" />
     <link rel="stylesheet" type="text/css" href="/static/css/projects.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="/static/scripts/fetch_functions.js"></script>
     <script src="/static/scripts/api_calls.js"></script>
     <script src="/static/scripts/single_project.js"></script>
@@ -23,7 +24,9 @@
 						{% if session['user_type'] == 'teacher' %}
                     <a class="nav-link" href="/teachers">Teachers</a>
 						{% endif %}
+            {% if session['logged_in'] %}
                     <a class="nav-link" href="/profile">Profile</a>
+            {% endif %}
                     <a class="nav-link" href="/about">About</a>
 						{% if session['logged_in'] %}
                     <a class="nav-link" href="/logout">Logout</a>
@@ -35,8 +38,11 @@
         </header>
 
         <div id="mainContent-wrap">
-                <input hidden type="text" id="user_id" value="220"></input>
-                <input hidden type="text" id="user_type" value="teacher"></input>
+			<input hidden type="text" id="user_id" value="{{ session['user_id'] }}"></input>
+			<input hidden type="text" id="user_type" value="{{ session['user_type'] }}"></input>
+			<div id="background">
+                <img src="/static/images/forest-background-2.jpg" alt="">
+			</div>
         </div>
         <footer id="footer">
             <ul id="footerList">

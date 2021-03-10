@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>JavaScript Bar Chart</title>
+      <script src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="../static/scripts/fetch_functions.js"></script>
+    <script src="../static/scripts/api_calls.js"></script>
+      <script>
+
+        // google.charts.setOnLoadCallback(drawChart(prompt_id, user_id, element_id));
+        // async function dothis() {
+        google.charts.load('current', {packages: ['corechart']}).then(dd=>{drawCharts()});
+
+
+
+        var prompt_id = 249;
+        var user_id = 111;
+        var element_id = "myPieChart";
+
+
+    async function drawCharts(){
+      await drawChart(prompt_id, user_id, element_id);
+      await drawChart(251, user_id, 'container2');
+    }
+
+    async function drawChart(prompt_id, user_id, element_id) {
+
+      return await getData(prompt_id, user_id).then(chart_info=>{
+      // Define the chart to be drawn.
+        console.log(chart_info);
+        var data2 = new google.visualization.DataTable();
+        data2.addColumn(chart_info["header"]);
+        data2.addColumn('number', 'Percentage');
+        data2.addRows(chart_info["rows"]);
+
+
+        // Instantiate and draw the chart.
+        var chart = new google.visualization.ColumnChart(document.getElementById(element_id));
+        chart.draw(data2, null);
+      });
+    }
+
+ 
+      async function getData(prompt_id, user_id) {
+        var data = {
+            header: ["Name", "Count"],
+            rows: [
+        ]};
+        const response = await get_observations_count(prompt_id, user_id).then(async response_data=>{
+          var pr_prompts = response_data;
+          for (var i=0; i < pr_prompts["results"].length; i++) {
+            var new_row=[];
+            new_row.push(pr_prompts["results"][i]["response"]);
+            new_row.push(pr_prompts["results"][i]["response_count"]);
+           console.log(new_row);
+           data["rows"].push(new_row);
+          }
+          return data;
+        });
+        return response;
+      }
+      </script>
+  </head>
+  <body>
+    <div id="myPieChart" style="width: 100%; height: 100%"></div>
+    <div id="container2" style="width: 100%; height: 100%"></div>
+
+  </body>
+</html>

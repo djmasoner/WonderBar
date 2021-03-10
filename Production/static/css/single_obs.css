@@ -1,0 +1,485 @@
+#mainContent {
+    background: transparent;
+}
+
+#recent-project-list {
+    background-color: transparent;
+    margin: 5% auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    /*padding: 40px;*/
+    width: 95%;
+    min-width: 300px;
+}
+
+#background {
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    z-index: -1;
+}
+
+#background img {
+    position: absolute;
+    opacity: 0.5;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    min-width: 50%;
+    min-height: 50%;
+}
+
+
+/* CSS Project Display Definitions*/
+.project-buttons {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 600;
+    width: 100%;
+    margin: 35px 0;
+}
+
+.project-buttons .left-column a, .project-buttons .right-column a {
+    margin: 10px;
+    padding: 15px 50px;
+    width: 50%;
+    border-radius: 12px;
+    color: white;
+    background: var(--theme3);
+}
+
+
+.prevnext-buttons .left-column, .prevnext-buttons .right-column {
+    width: 100%;
+    font-weight: bold;
+    color: white;
+
+}
+
+.prevnext-buttons .left-column a, .prevnext-buttons .right-column a {
+    margin: 10px;
+    padding: 15px 50px;
+    width: 50%;
+    border-radius: 12px;
+    color: white;
+    background: var(--theme3);
+    font-size: 1.5rem;
+}
+
+.project-buttons a:hover {
+    color: black;
+    background: var(--theme2);
+}
+
+.projects-header {
+    text-align: center;
+    border-bottom: 3px solid var(--theme3);
+    margin: 0 20px;
+}
+
+.project {
+    background: var(--theme3);
+    margin-top: 15px;
+    padding: 5px;
+    width: 90%;
+    margin: 25px auto;
+    border-radius: 20px;
+}
+
+.projectTitle {
+    padding: 8px 12px;
+}
+
+.projectTitle h1 {
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--grey3);
+}
+
+.projectTitle h2 {
+    margin-top: 5px;
+    font-size: 18px;
+    color: white;
+}
+
+.projectContent {
+    background: var(--theme1);
+    border-radius: 15px;
+}
+
+.projectImage {
+    margin: 10px;
+    
+}
+
+.projectImage img {
+    height: 150px;
+    width: 150px;
+}
+
+.projectText {
+    padding-right: 25px;
+    font-size: 16px;
+    color: black;
+    line-height: 30px;
+}
+
+a {
+    text-decoration: none;
+    color: #152413;
+}
+
+a:hover {
+    color: #597A41;
+}
+
+/* Single Project Page Styles*/
+.projectGallery {
+    margin: 10px;
+    width: 175%;
+    min-width: 300px;
+    height: auto;
+    position: relative;
+}
+
+.container {
+    position: relative;
+}
+
+.galleryImage {
+    display: none;
+}
+
+.cursor {
+    cursor: pointer;
+}
+
+.imgNumber {
+    color: #bbbbbb;
+    text-shadow: 1px 1px black;
+    font-size: 16px;
+    padding: 8px 12px;
+    position: absolute;
+}
+
+.caption-container {
+    text-align: center;
+    background-color: #222;
+    padding: 2px 16px;
+    color: white;
+    margin-bottom: 10px;
+}
+
+.galleryRow:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.galleryColumn {
+    float: left;
+    width: 25%;
+    padding: 0 5px;
+}
+
+.demo {
+    opacity: 0.6;
+}
+
+.active,
+.demo:hover {
+    opacity: 1;
+}
+
+.projectInfo {
+    padding-right: 25px;
+    font-size: 16px;
+    color: black;
+    line-height: 30px;
+    height: 100%;
+    position: relative;
+
+}
+
+.obsButtons {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.obsButtons a {
+    display: inline-block;
+    background: var(--theme4);
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    padding: 8px;
+    width: 45%;
+    margin: 5px 5px;
+}
+
+.obsButtons a:hover {
+    opacity: 0.8;
+}
+
+.left-column {
+    float: left;
+    width: 40%;
+    margin-top: 6px;
+}
+
+.right-column {
+    float: left;
+    width: 60%;
+    margin-top: 6px;
+}
+
+@media screen and (max-width: 600px) {
+    #recent-project-list {
+        width: 100%;
+        padding: 0;
+    }
+
+    .left-column,
+    .right-column {
+        width: 100%;
+        margin-top: 0;
+        font-size: 16px;
+    }
+    /*.project {
+        width: 100%;
+    }*/
+}
+
+
+    #loader {
+        text-align: center;
+      display: none;
+      border: 16px solid #f3f3f3;
+      border-radius: 50%;
+      border-top: 16px solid #3498db;
+      width: 120px;
+      height: 120px;
+      -webkit-animation: spin 2s linear infinite; /* Safari */
+      animation: spin 2s linear infinite;
+      margin: 10% 40%;
+    }
+
+div.gallery {
+    text-align: center;
+  border: 1px solid #ccc;
+}
+
+div.gallery:hover {
+  border: 1px solid #777;
+}
+
+div.gallery img {
+  max-width: 100%;
+  height: auto;
+  max-height: 75vh;
+}
+
+div.desc {
+  padding: 15px;
+  text-align: center;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.responsive {
+  padding: 0 6px 6px 0;
+  /*float: left;*/
+  display: inline-block;
+  width: 100%;
+}
+
+
+@media only screen and (max-width: 700px) {
+  .responsive {
+    width: 100%;
+    margin: 6px 0;
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .responsive {
+    width: 100%;
+  }
+}
+
+.right-column button{
+    background: var(--theme4);
+}
+
+.step {
+    height: 50px;
+    width: 50px;
+    margin: 0 2px;
+    background-color: var(--theme5);
+    border: none;
+    border-radius: 50%;
+    display: inline-block;
+    opacity: 0.7;
+    font-size: 30px;
+    text-align: center;
+    font-weight: bold;
+    color: white;
+}
+
+.left-column {
+    width: 40%;
+}
+
+.right-column {
+    width: 100%;
+}
+
+
+.right-column h3, .left-column h3 {
+    text-align: left;
+    font-size: 1rem;
+    width: 100%;
+    border-bottom: 2px solid var(--theme4);
+}
+
+.obs-container {
+    display: block;
+    margin: 5px 0;
+    padding: 3px;
+    background: var(--theme4);
+    border-radius: 10px;
+}
+
+.obs-container h2 {
+    color: white;
+    font-size: 1.1rem;
+    margin: 3px;
+}
+
+.obs-container p {
+    background: white;
+    /*border-radius: 7px;*/
+    margin: 0;
+    padding: 5px;
+    font-size: 1rem;
+
+}
+
+.obs-container span {
+    background: white;
+    /*border-radius: 7px;*/
+    margin: 0;
+    padding: 5px;
+    font-size: 1rem;
+    float: right;
+    border-radius: 50%;
+    background-color: var(--theme2)
+
+}
+
+/*
+#obs-pages {
+    overflow-y: scroll;
+    max-height: 75vh;
+}
+*/
+.avatar {
+    vertical-align: middle;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    padding: 5px;
+}
+
+.obs-links a {
+    background: white;
+    border-radius: 7px;
+    margin: 0;
+    padding: 5px;
+    font-size: 20px;
+    color: black;
+    display: block;
+    width: 100%;
+}
+
+.obs-links a:hover {
+    background: var(--theme2);
+    border-radius: 7px;
+    margin: 0;
+    padding: 5px;
+    font-size: 20px;
+    color: black;
+    display: block;
+    width: 100%;
+}
+
+@media screen and (max-width: 600px) {
+    #regForm {
+        width: 100%;
+        padding: 0;
+    }
+    .left-column,
+    .right-column {
+        width: 100%;
+        margin-top: 0;
+        font-size: 16px;
+    }
+    .add-material-form {
+        margin-top: 40px;
+        width: 100%;
+        display: inline-block;
+        font-size: 16px;
+    }
+    .materialsTable {
+        margin-top: 40px;
+        width: 100%;
+        display: inline-block;
+        font-size: 16px;
+    }
+    .media-file {
+        width: 100%;
+        margin: 0;
+    }
+    #delete_image {
+        width: 100%;
+        margin: 0;
+    }
+    .projects {
+        width: 100%;
+    }
+    #loader {
+        text-align: center;
+      display: none;
+      border: 16px solid #f3f3f3;
+      border-radius: 50%;
+      border-top: 16px solid #3498db;
+      width: 120px;
+      height: 120px;
+      -webkit-animation: spin 2s linear infinite; /* Safari */
+      animation: spin 2s linear infinite;
+      margin: 10% 30%;
+    }
+}
+
+.tab {
+    display: block;
+}
+.add-location {
+    display: none;
+}
+
+    /* Safari */
+    @-webkit-keyframes spin {
+      0% { -webkit-transform: rotate(0deg); }
+      100% { -webkit-transform: rotate(360deg); }
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }

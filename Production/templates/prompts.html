@@ -7,9 +7,9 @@
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
 		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyACWR7r7iEOXFdRlsGhpXvF-EiqvCR9vUo"></script>
 		<link rel="stylesheet" type="text/css" href="/static/css/main.css" />
-		<link rel="stylesheet" type="text/css" href="/static/css/projects.css" />
 		<link rel="stylesheet" type="text/css" href="/static/css/newObserv.css" />
 		<link rel="stylesheet" type="text/css" href="/static/css/createProject.css" />
+		<link rel="stylesheet" type="text/css" href="/static/css/observations.css" />
 		<link rel="stylesheet" type="text/css" href="/static/css/prompts.css" />
 		<script src="/static/scripts/fetch_functions.js"></script>
 		<script src="./static/scripts/api_calls.js"></script>
@@ -34,7 +34,9 @@
             {% if session['user_type'] == 'teacher' %}
                     <a class="nav-link" href="/teachers">Teachers</a>
             {% endif %}
+            {% if session['logged_in'] %}
                     <a class="nav-link" href="/profile">Profile</a>
+            {% endif %}
                     <a class="nav-link" href="/about">About</a>
             {% if session['logged_in'] %}
                     <a class="nav-link" href="/logout">Logout</a>

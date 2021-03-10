@@ -32,6 +32,11 @@
     min-height: 50%;
 }
 
+.projectContent {
+    background: var(--theme1);
+    display: flex;
+    border-radius: 15px;
+}
 
 .projectContent {
     display: block;
@@ -44,14 +49,19 @@
     color: var(--theme4);
 }
 
-#project_avatar {
+.media-files {
     display: block;
+    text-align: center;
 }
 
 #avatar {
 	width: 100%;
 }
 
+input[type=checkbox]:checked{
+	  content: '\2705';
+
+}
 input[type=text],
 input[type=file],
 textarea,
@@ -114,7 +124,7 @@ button:hover {
 }
 
 #nextBtn {
-	/*backgrosund-color: var(--grey2);*/
+	background-color: var(--theme4);
 	margin: 0;
 }
 
@@ -176,7 +186,18 @@ button:hover {
 }
 
 
-/* Bordered form */
+.success-message, .error-message {
+	font-size: 14px;
+	margin-bottom: 1rem;
+	display: block;
+}
+.success-message:before {
+  content: '\2705';
+}
+
+.error-message:before {
+  content: '\274C';
+}
 
 #added-materials-div {
 	display: none;
@@ -231,6 +252,9 @@ button:hover {
 	width: 50%%;
 }
 
+.active-media {
+	display: block;
+}
 
 /* Style the button that is used to open and close the collapsible content */
 
@@ -294,14 +318,19 @@ button:hover {
 	display: none;
 }
 
-#avatarImage {
-	width: 100%;
-	height: 50%;
+#project_avatar {
+	max-height: 500px;
 	/*margin: 1% 25%;*/
-	border: 1px solid;
+	/*border: 1px solid;*/
 }
 
-#deleteImage {
+.media-file {
+	max-width: 100%;
+	max-height: 500px;
+	/*margin: 1% 25%;*/
+	/*border: 1px solid;*/
+}
+#delete_image, #delete_prompt_image, .delete_image {
 	padding: 10px;
 	width: 100%;
 	font-size: 17px;
@@ -309,6 +338,186 @@ button:hover {
 	border: 1px solid #aaaaaa;
 	margin: 0;
 }
+
+
+
+/* CSS Project Display Definitions*/
+.project-buttons {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 600;
+    width: 100%;
+    margin: 35px 0;
+}
+
+.project-buttons a {
+    margin: 10px;
+    padding: 15px 50px;
+    width: 50%;
+    border-radius: 12px;
+    color: white;
+    background: var(--theme3);
+}
+
+
+.prevnext-buttons .left-column, .prevnext-buttons .right-column {
+    width: 50%;
+    font-weight: bold;
+    color: white;
+
+}
+
+
+.project-buttons a:hover {
+    color: black;
+    background: var(--theme2);
+}
+
+.projects-header {
+    text-align: center;
+    border-bottom: 3px solid var(--theme3);
+    margin: 0 20px;
+}
+
+.project {
+    background: var(--theme3);
+    margin-top: 15px;
+    padding: 5px;
+    width: 90%;
+    margin: 25px auto;
+    border-radius: 20px;
+}
+
+.projectTitle {
+    padding: 8px 12px;
+}
+
+.projectTitle h1 {
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--grey3);
+}
+
+.projectTitle h2 {
+    margin-top: 5px;
+    font-size: 18px;
+    color: white;
+}
+
+.projectImage {
+    margin: 10px;
+    
+}
+
+.projectImage img {
+    height: 150px;
+    width: 150px;
+}
+
+.projectText {
+    padding-right: 25px;
+    font-size: 16px;
+    color: black;
+    line-height: 30px;
+}
+
+a {
+    text-decoration: none;
+    color: #152413;
+}
+
+a:hover {
+    color: #597A41;
+}
+
+/* Single Project Page Styles*/
+.projectGallery {
+    margin: 10px;
+    width: 175%;
+    min-width: 300px;
+    height: auto;
+    position: relative;
+}
+
+.container {
+    position: relative;
+}
+
+.galleryImage {
+    display: none;
+}
+
+.cursor {
+    cursor: pointer;
+}
+
+.imgNumber {
+    color: #bbbbbb;
+    text-shadow: 1px 1px black;
+    font-size: 16px;
+    padding: 8px 12px;
+    position: absolute;
+}
+
+.caption-container {
+    text-align: center;
+    background-color: #222;
+    padding: 2px 16px;
+    color: white;
+    margin-bottom: 10px;
+}
+
+.galleryRow:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.galleryColumn {
+    float: left;
+    width: 25%;
+    padding: 0 5px;
+}
+
+.demo {
+    opacity: 0.6;
+}
+
+.active,
+.demo:hover {
+    opacity: 1;
+}
+
+.projectInfo {
+    padding-right: 25px;
+    font-size: 16px;
+    color: black;
+    line-height: 30px;
+    height: 100%;
+    position: relative;
+
+}
+
+.obsButtons {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.obsButtons a {
+    display: inline-block;
+    background: var(--theme4);
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    padding: 8px;
+    width: 45%;
+    margin: 5px 5px;
+}
+
+.obsButtons a:hover {
+    opacity: 0.8;
+}
+
 
 @media screen and (max-width: 600px) {
 	#regForm {
@@ -333,11 +542,11 @@ button:hover {
 		display: inline-block;
 		font-size: 16px;
 	}
-	#avatarImage {
+	.media-file {
 		width: 100%;
 		margin: 0;
 	}
-	#deleteImage {
+	#delete_image {
 		width: 100%;
 		margin: 0;
 	}

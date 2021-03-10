@@ -1,6 +1,66 @@
 ﻿#mainContent {
-    background: white;
+    background: transparent;
 }
+
+#project-list {
+    background-color: white;
+    margin: 0 auto 5%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: inline-block;
+    width: 95%;
+    min-width: 300px;
+}
+
+#loader {
+text-align: center;
+  display: none;
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+  margin: 10% 40%;
+}
+
+
+#background {
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    z-index: -1;
+}
+
+#background img {
+    position: absolute;
+    opacity: .5;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    min-width: 50%;
+    min-height: 50%;
+}
+
+.projects-border-outer {
+    background-color: var(--theme4);
+    margin: 25px;
+    padding: 5px;
+    border-radius: 20px;
+}
+
+.projects-border-inner {
+    background-color: white;
+    display: table;
+    width: 100%;
+    padding: 15px;
+    border-radius: 15px;
+}
+
 
 /* CSS Project Display Definitions*/
 .project-buttons {
@@ -9,9 +69,10 @@
     font-weight: 600;
     width: 100%;
     margin: 35px 0;
+    display: inline-block;
 }
 
-.project-buttons a {
+.project-buttons a, .project-buttons a {
     margin: 10px;
     padding: 15px 50px;
     width: 50%;
@@ -20,22 +81,49 @@
     background: var(--theme3);
 }
 
-.project-buttons a:hover {
-    color: black;
-    background: var(--theme2);
+.row {
+    width: 100%;
 }
 
-.projects-header {
-    text-align: center;
-    border-bottom: 3px solid var(--theme3);
-    margin: 0 20px;
+
+#projects-header {
+    color: white;
+}
+
+.prevnext-buttons .left-column, .prevnext-buttons .right-column {
+    width: 50%;
+    font-weight: bold;
+    color: white;
+
+}
+
+.prevnext-buttons  a, .prevnext-buttons  a {
+    margin: 20px 20px;
+
+}
+
+.prevnext-buttons .left-column a, .prevnext-buttons .right-column a {
+    margin: 10px 20px;
+    padding: 15px 50px;
+    width: 100px;
+    border-radius: 12px;
+    color: white;
+    background: var(--theme3);
+    font-size: 1.5rem;
+}
+
+.project-buttons a:hover, 
+.prevnext-buttons .left-column a:hover,
+.prevnext-buttons .right-column a:hover  {
+    color: black;
+    background: var(--theme2);
 }
 
 .project {
     background: var(--theme3);
     margin-top: 15px;
     padding: 5px;
-    width: 90%;
+    width: 95%;
     margin: 25px auto;
     border-radius: 20px;
 }
@@ -91,18 +179,14 @@ a:hover {
 /* Single Project Page Styles*/
 .projectGallery {
     margin: 10px;
-    width: 175%;
-    min-width: 300px;
+    width: 100%;
+    /*min-width: 300px;*/
     height: auto;
     position: relative;
 }
 
 .container {
     position: relative;
-}
-
-.galleryImage {
-    display: none;
 }
 
 .cursor {
@@ -112,7 +196,7 @@ a:hover {
 .imgNumber {
     color: #bbbbbb;
     text-shadow: 1px 1px black;
-    font-size: 12px;
+    font-size: 16px;
     padding: 8px 12px;
     position: absolute;
 }
@@ -162,7 +246,7 @@ a:hover {
 }
 
 .obsButtons a {
-    display: inline-block;
+    display: inline-flex;
     background: var(--theme4);
     font-size: 16px;
     font-weight: bold;
@@ -170,8 +254,262 @@ a:hover {
     padding: 8px;
     width: 45%;
     margin: 5px 5px;
+    min-height: 75px;
+    min-width: 150px;
 }
 
 .obsButtons a:hover {
     opacity: 0.8;
+}
+
+.obs-container {
+    display: inline-block;
+    margin: 5px 10px 20px;
+    padding: 3px;
+    background: var(--theme3);
+    border-radius: 10px;
+    max-width: 115px;
+}
+
+
+.obs-container h2 {
+    color: white;
+    font-size: 1.1rem;
+    margin: 3px;
+}
+
+.obs-container p {
+    background: white;
+    border-radius: 7px;
+    margin: 0;
+    padding: 5px;
+    font-size: 20px;
+    color: black;
+}
+
+.obs-container a {
+    cursor: auto;
+}
+
+
+.left-column {
+    float: left;
+    width: 40%;
+    margin-top: 6px;
+}
+
+.right-column {
+    float: left;
+    width: 60%;
+    margin-top: 6px;
+}
+
+.equal-column {
+    float: left;
+    width: 33%;
+    margin-top: 6px;
+    text-align: left;
+
+}
+
+.project-filter {
+    margin: 0 auto;
+    width: 95%;
+}
+
+.filter-items {
+    max-height: 200px;
+    border: solid thin black;
+    background-color: white;
+}
+
+#proj_topics, #proj_locations {
+    overflow: scroll;
+    max-height: 200px;
+    border: solid thin black;
+    background-color: white;
+}
+
+#filter-error {
+    display: none;
+}
+
+
+.equal-column p {
+    font-weight: bold;
+}
+
+
+.filter-items p {
+    font-weight: normal;
+}
+.tab {
+    overflow: hidden;
+    background-color: var(--theme4);
+    font-size: 20px;
+    margin: 0 auto;
+    width: 95%;
+    min-width: 300px;
+}
+
+/* Style the buttons that are used to open the tab content */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  font-weight: bold;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: white;
+  color: black;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: white;
+  color: black;
+}
+
+.tab button.inactive {
+  display: none;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-top: none;
+}
+
+.sort-projects {
+    text-align: right;
+    width: 95%;
+    margin: 0 auto;
+    background-color: white;
+    padding: 20px;
+}
+
+select {
+    font-size: 18px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    border: 2px solid var(--grey2);
+}
+
+
+/* Style the button that is used to open and close the collapsible content */
+.collapsible {
+  background-color: var(--theme3);
+  color: white;
+  cursor: pointer;
+  padding: 18px;
+  width: 95%;
+  border: none;
+  outline: none;
+  text-align: left;
+  outline: none;
+  font-size: 1.5rem;
+  margin: 0 auto;
+}
+
+.collapsible:after {
+  content: '\02795'; /* Unicode character for "plus" sign (+) */
+  font-size: 16px;
+  color: white;
+  float: right;
+  margin-left: 5px;
+}
+
+.collapsible.active:after {
+  content: "\2796"; /* Unicode character for "minus" sign (-) */
+}
+
+button:focus {
+    border: none;
+    outline: none;
+
+}
+/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+.collapsible:hover {
+  background-color: var(--theme1);
+}
+
+.active:hover {
+  background-color: var(--theme3);
+}
+/* Style the collapsible content. Note: hidden by default */
+.collapsible-content {
+  padding: 0 18px;
+  display: none;
+  overflow: hidden;
+  background-color: var(--theme1);
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 1px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: var(--grey1); 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: var(--theme5); 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: var(--grey3); 
+}
+
+.save-heart {
+  border-radius: 12px;
+  background-color: var(--theme1);
+}
+
+.save-heart:hover {
+  background-color: var(--theme4);
+}
+
+
+@media screen and (max-width: 600px) {
+    .projects-border-outer {
+        margin: 25px 5px;
+    }
+    #project-list, .tab {
+        width: 100%;
+        padding: 0;
+        margin: 0;
+    }
+    .tab button {
+        width: 50%;
+    }
+    #proj-buttons {
+        flex-shrink: inherit;
+        display: flex;
+    }
+    .left-column,
+    .right-column {
+        width: 100%;
+        margin-top: 0;
+        font-size: 16px;
+    }
+    .equal-column, .project-filter, .collapsible {
+        width: 100%;
+
+    }
+    .sort-projects {
+        width: 100%;
+        margin: 0;
+    }
 }
